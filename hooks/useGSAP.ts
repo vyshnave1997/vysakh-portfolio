@@ -1,4 +1,5 @@
 import { useEffect, RefObject, useMemo } from 'react';
+
 interface UseGSAPProps {
   secondSectionRef: RefObject<HTMLDivElement | null>;
   horizontalScrollRef: RefObject<HTMLDivElement | null>;
@@ -9,8 +10,17 @@ interface UseGSAPProps {
   infoDescriptionRef: RefObject<HTMLParagraphElement | null>;
   skillsHeadingRef: RefObject<HTMLHeadingElement | null>;
 }
+
 export function useGSAP(props: UseGSAPProps) {
-  const { secondSectionRef, horizontalScrollRef, infoSectionRef, skillsSectionRef, infoTitleRef, infoMainTextRef, infoDescriptionRef } = props;
+  const { 
+    secondSectionRef, 
+    horizontalScrollRef, 
+    infoSectionRef, 
+    skillsSectionRef, 
+    infoTitleRef, 
+    infoMainTextRef, 
+    infoDescriptionRef 
+  } = props;
   
   // Memoize refs to prevent dependency array changes
   const refs = useMemo(() => ({
@@ -64,12 +74,17 @@ export function useGSAP(props: UseGSAPProps) {
       
       gsap.registerPlugin(ScrollTrigger);
 
-      // Clean up any existing ScrollTriggers
-      ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
+      // Clean up any existing ScrollTriggers from this hook only
+      ScrollTrigger.getAll().forEach((trigger: any) => {
+        // Don't kill triggers from ProjectsSection component
+        if (trigger.vars?.id !== 'horizontal' && trigger.vars?.trigger !== refs.horizontalScrollRef?.current) {
+          trigger.kill();
+        }
+      });
 
       // Wait for DOM to be ready
       setTimeout(() => {
-        if (refs.secondSectionRef.current) {
+        if (refs.secondSectionRef?.current) {
           gsap.fromTo(
             refs.secondSectionRef.current,
             { y: 100, opacity: 0 },
@@ -89,7 +104,7 @@ export function useGSAP(props: UseGSAPProps) {
         }
 
         // Character animation for Info title
-        if (refs.infoTitleRef.current) {
+        if (refs.infoTitleRef?.current) {
           const titleChars = refs.infoTitleRef.current.querySelectorAll('.char');
           if (titleChars.length > 0) {
             gsap.fromTo(
@@ -116,7 +131,7 @@ export function useGSAP(props: UseGSAPProps) {
         }
 
         // Character animation for Info main text
-        if (refs.infoMainTextRef.current) {
+        if (refs.infoMainTextRef?.current) {
           const mainChars = refs.infoMainTextRef.current.querySelectorAll('.char');
           if (mainChars.length > 0) {
             gsap.fromTo(
@@ -143,7 +158,7 @@ export function useGSAP(props: UseGSAPProps) {
         }
 
         // Character animation for Info description
-        if (refs.infoDescriptionRef.current) {
+        if (refs.infoDescriptionRef?.current) {
           const descChars = refs.infoDescriptionRef.current.querySelectorAll('.char');
           if (descChars.length > 0) {
             gsap.fromTo(
@@ -169,27 +184,11 @@ export function useGSAP(props: UseGSAPProps) {
           }
         }
 
-        // Horizontal scroll for projects
-        if (refs.horizontalScrollRef.current) {
-          const sections = gsap.utils.toArray('.project-card');
-          
-          if (sections.length > 0) {
-            gsap.to(sections, {
-              xPercent: -100 * (sections.length - 1),
-              ease: 'none',
-              scrollTrigger: {
-                trigger: refs.horizontalScrollRef.current,
-                pin: true,
-                scrub: 1,
-                snap: 1 / (sections.length - 1),
-                end: () => '+=' + (refs.horizontalScrollRef.current as any).offsetWidth * 2,
-              },
-            });
-          }
-        }
+        // NOTE: Horizontal scroll animation is now handled by ProjectsSection component itself
+        // This hook no longer manages the horizontal scroll to avoid conflicts
 
         // Fade effect from black to white between Info and Skills sections
-        if (refs.infoSectionRef.current && refs.skillsSectionRef.current) {
+        if (refs.infoSectionRef?.current && refs.skillsSectionRef?.current) {
           gsap.to(refs.infoSectionRef.current, {
             scrollTrigger: {
               trigger: refs.infoSectionRef.current,
@@ -217,7 +216,14 @@ export function useGSAP(props: UseGSAPProps) {
     // Cleanup function
     return () => {
       if (typeof (window as any).ScrollTrigger !== 'undefined') {
-        (window as any).ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
+        (window as any).ScrollTrigger.getAll().forEach((trigger: any) => {
+          // Only kill triggers managed by this hook, not ProjectsSection triggers
+          if (trigger.vars?.id !== 'horizontal' && 
+              trigger.vars?.trigger !== refs.horizontalScrollRef?.current &&
+              !trigger.vars?.containerAnimation) {
+            trigger.kill();
+          }
+        });
       }
     };
   }, [refs]);
