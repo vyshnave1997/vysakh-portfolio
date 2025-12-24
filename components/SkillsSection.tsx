@@ -6,7 +6,7 @@ const skills = [
 ];
 
 interface SkillsSectionProps {
-  headingRef?: React.RefObject<HTMLHeadingElement>;
+  headingRef?: React.RefObject<HTMLHeadingElement | null>;
 }
 
 const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingRef }, ref) => {
