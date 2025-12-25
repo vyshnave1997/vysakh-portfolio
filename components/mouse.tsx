@@ -35,13 +35,13 @@ export default function CustomCursor() {
     const handleMouseEnter = () => setIsHidden(false);
     const handleMouseLeave = () => setIsHidden(true);
 
-    // Animate outline with smooth follow effect
+    // Animate outline with faster follow effect (increased from 0.5 to 0.15)
     const animateOutline = () => {
       const distX = mouseX - outlineX;
       const distY = mouseY - outlineY;
 
-      outlineX += distX * 0.5;
-      outlineY += distY * 0.5;
+      outlineX += distX * 0.15;
+      outlineY += distY * 0.15;
 
       cursorOutline.style.left = `${outlineX}px`;
       cursorOutline.style.top = `${outlineY}px`;

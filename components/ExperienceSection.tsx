@@ -52,51 +52,51 @@ export default function ExperienceSection() {
 
       const serviceItems = servicesRef.current.querySelectorAll('.service-item');
       const heading = sectionRef.current?.querySelector('h2');
+      const areasHeading = sectionRef.current?.querySelector('.areas-heading');
+      const servicesHeading = sectionRef.current?.querySelector('.services-heading');
+      const servicesChars = sectionRef.current?.querySelectorAll('.services-char');
+      const valueCards = sectionRef.current?.querySelectorAll('.value-card');
+      const bottomText = sectionRef.current?.querySelector('.bottom-text');
+      const bottomTextChars = sectionRef.current?.querySelectorAll('.bottom-char');
 
-      // Fade in services as they scroll (works on all devices)
-      serviceItems.forEach((item, index) => {
-        // Combined animation: fade in from bottom and fade out at top
-        gsap.fromTo(
-          item,
-          {
-            opacity: 0,
-            x: -100,
-            scale: 0.8,
-          },
+      // Fade in services heading characters on initial view
+      if (servicesChars && servicesChars.length > 0) {
+        gsap.fromTo(servicesChars,
+          { opacity: 0, y: 20 },
           {
             opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 2,
+            y: 0,
+            stagger: 0.05,
             ease: 'power3.out',
+            duration: 0.6,
             scrollTrigger: {
-              trigger: item,
-              start: 'top 85%',
-              end: 'top 50%',
-              toggleActions: 'play reverse play reverse',
-            },
-            delay: index * 0.1,
+              trigger: servicesHeading,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
           }
         );
+      }
 
-        // Fade out services when they reach the heading area (with scrub for smooth bidirectional)
-        gsap.fromTo(item, {
+      // Fade out "AREAS OF EXPERTISE:" as you scroll
+      if (areasHeading) {
+        gsap.fromTo(areasHeading, {
           opacity: 1,
-          scale: 1,
+          y: 0,
         }, {
           opacity: 0,
-          scale: 0.95,
+          y: -30,
           ease: 'none',
           scrollTrigger: {
-            trigger: item,
-            start: 'top 180px',
-            end: 'top 80px',
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'top -150px',
             scrub: 0.6,
           }
         });
-      });
+      }
 
-      // Fade out heading as you scroll down (works on all devices)
+      // Fade out main heading as you scroll down
       if (heading) {
         gsap.fromTo(heading, {
           opacity: 1,
@@ -113,6 +113,121 @@ export default function ExperienceSection() {
           }
         });
       }
+
+      // Fade out "SERVICES" heading as you scroll
+      if (servicesHeading) {
+        gsap.fromTo(servicesHeading, {
+          opacity: 1,
+          y: 0,
+        }, {
+          opacity: 0,
+          y: -30,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: servicesRef.current,
+            start: 'top 200px',
+            end: 'top 100px',
+            scrub: 0.6,
+          }
+        });
+      }
+
+      // Fade in services as they scroll
+      serviceItems.forEach((item, index) => {
+        gsap.fromTo(
+          item,
+          {
+            opacity: 0,
+            x: -100,
+            scale: 0.8,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 3.5,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 95%',
+              end: 'top 30%',
+              toggleActions: 'play reverse play reverse',
+            },
+            delay: index * 0.2,
+          }
+        );
+
+        // Fade out services when they reach the heading area
+        gsap.fromTo(item, {
+          opacity: 1,
+          scale: 1,
+        }, {
+          opacity: 0,
+          scale: 0.95,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 280px',
+            end: 'top 30px',
+            scrub: 3,
+          }
+        });
+      });
+
+      // Modern 3D card flip and parallax effect for value cards
+      if (valueCards && valueCards.length > 0) {
+        valueCards.forEach((card: any, index: number) => {
+          // Initial state - cards start rotated and scaled down
+          gsap.set(card, {
+            rotationY: -90,
+            scale: 0.8,
+            opacity: 0,
+            transformPerspective: 1000,
+            transformOrigin: 'left center'
+          });
+
+          // 3D flip in animation with stagger
+          gsap.to(card, {
+            rotationY: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'back.out(1.4)',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            },
+            delay: index * 0.2
+          });
+
+          // Parallax scroll effect - cards move at different speeds
+          gsap.to(card, {
+            y: -50 * (index + 1),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.5
+            }
+          });
+
+          // Hover-like scale effect on scroll proximity
+          gsap.to(card, {
+            scale: 1.05,
+            boxShadow: '0 20px 40px rgba(34, 211, 238, 0.3)',
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 60%',
+              end: 'top 40%',
+              scrub: 1,
+              toggleActions: 'play reverse play reverse'
+            }
+          });
+        });
+      }
     };
 
     loadGSAP();
@@ -125,12 +240,22 @@ export default function ExperienceSection() {
     };
   }, []);
 
+  const splitText = (text: string, className: string) => {
+    return text.split('').map((char, i) => (
+      <span key={i} className={`${className} inline-block`}>
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  };
+
   return (
-    <div ref={sectionRef} className="relative bg-gray-50 text-black py-20 px-8 z-10" style={{ minHeight: '300vh' }}>
+    <div ref={sectionRef} className="relative bg-gray-50 text-black py-20 px-8 z-10" style={{ minHeight: '200vh' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-16 sticky top-20">
-          <p className="text-sm uppercase tracking-widest text-gray-500 mb-4">AREAS OF EXPERTISE:</p>
+          <p className="areas-heading text-sm uppercase tracking-widest text-gray-500 mb-4">
+            AREAS OF EXPERTISE:
+          </p>
           <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold text-black leading-tight">
             Quality Assurance & Testing
           </h2>
@@ -140,7 +265,9 @@ export default function ExperienceSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-20">
           {/* Left Side - Services List */}
           <div ref={servicesRef}>
-            <p className="text-sm uppercase tracking-widest text-gray-500 mb-8 sticky top-40">SERVICES</p>
+            <p className="services-heading text-sm uppercase tracking-widest text-gray-500 mb-8 sticky top-40">
+              {splitText('SERVICES', 'services-char')}
+            </p>
             <div className="space-y-8">
               {services.map((service) => (
                 <div key={service.id} className="service-item border-t border-gray-300 pt-8 hover:border-cyan-400 transition-colors">
@@ -164,17 +291,17 @@ export default function ExperienceSection() {
             </h3>
             
             <div className="mt-12 space-y-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="value-card bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h4 className="font-bold text-xl mb-2">8+ Years Experience</h4>
                 <p className="text-gray-600">Delivering quality solutions across multiple industries</p>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="value-card bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h4 className="font-bold text-xl mb-2">End-to-End Testing</h4>
                 <p className="text-gray-600">From test strategy to automation implementation</p>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="value-card bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h4 className="font-bold text-xl mb-2">Agile Methodology</h4>
                 <p className="text-gray-600">Seamless integration with development teams</p>
               </div>
