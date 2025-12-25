@@ -50,13 +50,10 @@ export default function ExperienceSection() {
 
       gsap.registerPlugin(ScrollTrigger);
 
-      const isMobile = window.innerWidth < 768;
-      if (isMobile) return;
-
       const serviceItems = servicesRef.current.querySelectorAll('.service-item');
       const heading = sectionRef.current?.querySelector('h2');
 
-      // Fade in services as they scroll
+      // Fade in services as they scroll (works on all devices)
       serviceItems.forEach((item, index) => {
         // Combined animation: fade in from bottom and fade out at top
         gsap.fromTo(
@@ -99,13 +96,13 @@ export default function ExperienceSection() {
         });
       });
 
-      // Fade out heading as you scroll down
+      // Fade out heading as you scroll down (works on all devices)
       if (heading) {
         gsap.fromTo(heading, {
           opacity: 1,
           y: 0,
         }, {
-          opacity: 0.3,
+          opacity: 0,
           y: -50,
           ease: 'none',
           scrollTrigger: {

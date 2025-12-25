@@ -75,9 +75,11 @@ export function useGSAP(props: UseGSAPProps) {
       gsap.registerPlugin(ScrollTrigger);
 
       // Clean up any existing ScrollTriggers from this hook only
+      // Don't kill triggers from ProjectsSection component
       ScrollTrigger.getAll().forEach((trigger: any) => {
-        // Don't kill triggers from ProjectsSection component
-        if (trigger.vars?.id !== 'horizontal' && trigger.vars?.trigger !== refs.horizontalScrollRef?.current) {
+        if (!trigger.vars?.id?.startsWith('project-') && 
+            trigger.vars?.trigger !== refs.horizontalScrollRef?.current &&
+            !trigger.vars?.containerAnimation) {
           trigger.kill();
         }
       });
@@ -217,8 +219,8 @@ export function useGSAP(props: UseGSAPProps) {
     return () => {
       if (typeof (window as any).ScrollTrigger !== 'undefined') {
         (window as any).ScrollTrigger.getAll().forEach((trigger: any) => {
-          // Only kill triggers managed by this hook, not ProjectsSection triggers
-          if (trigger.vars?.id !== 'horizontal' && 
+          // Don't kill any project-related triggers
+          if (!trigger.vars?.id?.startsWith('project-') && 
               trigger.vars?.trigger !== refs.horizontalScrollRef?.current &&
               !trigger.vars?.containerAnimation) {
             trigger.kill();

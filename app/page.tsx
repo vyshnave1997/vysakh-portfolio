@@ -61,7 +61,7 @@ export default function Home() {
       
       <CertificationsSection />
       
-      <ProjectsSection ref={horizontalScrollRef} projects={projectsData} />
+      <ProjectsSection projects={projectsData} />
       
       <Footer ref={footerRef} />
       
