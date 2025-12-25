@@ -1,13 +1,14 @@
 export interface Project {
-  id: number;
+  id: string | number;
   title: string;
-  description: string;
-  details: string;
   role: string;
   duration: string;
   year: string;
+  description: string;
+  details: string;
   images: string[];
 }
+
 
 export const projectsData: Project[] = [
   {
