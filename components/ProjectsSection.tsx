@@ -196,7 +196,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
             key={project.id}
             className="project-card px-8 md:px-16"
           >
-            <div className="max-w-7xl mx-auto w-full">
+            <div className="w-full">
               {/* Header */}
               <div className="mb-6">
                 <h3 className="text-xl md:text-2xl font-light text-white/60 mb-3">
