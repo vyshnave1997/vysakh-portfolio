@@ -56,8 +56,6 @@ export default function ExperienceSection() {
       const servicesHeading = sectionRef.current?.querySelector('.services-heading');
       const servicesChars = sectionRef.current?.querySelectorAll('.services-char');
       const valueCards = sectionRef.current?.querySelectorAll('.value-card');
-      const bottomText = sectionRef.current?.querySelector('.bottom-text');
-      const bottomTextChars = sectionRef.current?.querySelectorAll('.bottom-char');
 
       // Fade in services heading characters on initial view
       if (servicesChars && servicesChars.length > 0) {
@@ -249,33 +247,33 @@ export default function ExperienceSection() {
   };
 
   return (
-    <div ref={sectionRef} className="relative bg-gray-50 text-black py-20 px-8 z-10" style={{ minHeight: '200vh' }}>
-      <div className="max-w-7xl mx-auto">
+    <div ref={sectionRef} className="relative w-full bg-gray-50 text-black py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10" style={{ minHeight: '200vh' }}>
+      <div className="w-full">
         {/* Header Section */}
-        <div className="mb-16 sticky top-20">
-          <p className="areas-heading text-sm uppercase tracking-widest text-gray-500 mb-4">
+        <div className="mb-12 sm:mb-14 md:mb-16 sticky top-12 sm:top-16 md:top-20">
+          <p className="areas-heading text-xs sm:text-sm uppercase tracking-widest text-gray-500 mb-3 sm:mb-4">
             AREAS OF EXPERTISE:
           </p>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold text-black leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-black leading-tight">
             Quality Assurance & Testing
           </h2>
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-16 mt-12 sm:mt-16 md:mt-20">
           {/* Left Side - Services List */}
           <div ref={servicesRef}>
-            <p className="services-heading text-sm uppercase tracking-widest text-gray-500 mb-8 sticky top-40">
+            <p className="services-heading text-xs sm:text-sm uppercase tracking-widest text-gray-500 mb-6 sm:mb-8 sticky top-28 sm:top-32 md:top-40">
               {splitText('SERVICES', 'services-char')}
             </p>
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {services.map((service) => (
-                <div key={service.id} className="service-item border-t border-gray-300 pt-8 hover:border-cyan-400 transition-colors">
-                  <div className="flex items-start gap-6">
-                    <span className="text-cyan-400 font-light text-3xl">{service.id}</span>
-                    <div>
-                      <h4 className="text-2xl md:text-3xl font-bold mb-2">{service.title}</h4>
-                      <p className="text-gray-600 text-lg">{service.description}</p>
+                <div key={service.id} className="service-item border-t border-gray-300 pt-6 sm:pt-8 hover:border-cyan-400 transition-colors">
+                  <div className="flex items-start gap-3 sm:gap-4 md:gap-6">
+                    <span className="text-cyan-400 font-light text-xl sm:text-2xl md:text-3xl flex-shrink-0">{service.id}</span>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">{service.title}</h4>
+                      <p className="text-gray-600 text-sm sm:text-base md:text-lg">{service.description}</p>
                     </div>
                   </div>
                 </div>
@@ -284,26 +282,26 @@ export default function ExperienceSection() {
           </div>
 
           {/* Right Side - Value Proposition */}
-          <div className="lg:sticky lg:top-40 h-fit">
-            <p className="text-sm uppercase tracking-widest text-gray-500 mb-4">WHAT I CAN DO FOR YOUR TEAM</p>
-            <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-8">
-              I ensure <span className="bg-cyan-400 px-2">reliable</span> software quality that helps teams deliver with confidence.
+          <div className="lg:sticky lg:top-28 xl:top-40 h-fit">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-gray-500 mb-3 sm:mb-4">WHAT I CAN DO FOR YOUR TEAM</p>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 sm:mb-8">
+              I ensure <span className="bg-cyan-400 px-1 sm:px-2">reliable</span> software quality that helps teams deliver with confidence.
             </h3>
             
-            <div className="mt-12 space-y-6">
-              <div className="value-card bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="font-bold text-xl mb-2">8+ Years Experience</h4>
-                <p className="text-gray-600">Delivering quality solutions across multiple industries</p>
+            <div className="mt-8 sm:mt-10 md:mt-12 space-y-4 sm:space-y-6">
+              <div className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h4 className="font-bold text-lg sm:text-xl mb-1 sm:mb-2">8+ Years Experience</h4>
+                <p className="text-gray-600 text-sm sm:text-base">Delivering quality solutions across multiple industries</p>
               </div>
               
-              <div className="value-card bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="font-bold text-xl mb-2">End-to-End Testing</h4>
-                <p className="text-gray-600">From test strategy to automation implementation</p>
+              <div className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h4 className="font-bold text-lg sm:text-xl mb-1 sm:mb-2">End-to-End Testing</h4>
+                <p className="text-gray-600 text-sm sm:text-base">From test strategy to automation implementation</p>
               </div>
               
-              <div className="value-card bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="font-bold text-xl mb-2">Agile Methodology</h4>
-                <p className="text-gray-600">Seamless integration with development teams</p>
+              <div className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h4 className="font-bold text-lg sm:text-xl mb-1 sm:mb-2">Agile Methodology</h4>
+                <p className="text-gray-600 text-sm sm:text-base">Seamless integration with development teams</p>
               </div>
             </div>
           </div>

@@ -2,27 +2,28 @@ import { forwardRef } from 'react';
 
 const navigationLinks = [
   { label: 'Home', href: '#home' },
-  { label: 'Services', href: '#services' },
-  { label: 'Work', href: '#work' },
-  { label: 'Contacts', href: '#contacts' },
-  { label: 'Typefaces', href: '#typefaces' }
+  { label: 'Info', href: '#info' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Certifications', href: '#certifications' },
+  { label: 'Projects', href: '#projects' }
 ];
 
 const socialLinks = [
-  { label: 'Dribbble', href: '#dribbble' },
-  { label: 'Behance', href: '#behance' },
-  { label: 'Logopond', href: '#logopond' },
   { label: 'Instagram', href: '#instagram' },
-  { label: 'LinkedIn', href: '#linkedin' }
+  { label: 'LinkedIn', href: '#linkedin' },
+  { label: 'GitHub', href: '#github' }
 ];
 
 const Footer = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <footer 
       ref={ref}
-      className="relative min-h-screen bg-black text-white py-20 px-8 z-10"
+      className="relative min-h-screen bg-black text-white pt-20 pb-8 px-8 z-10"
     >
-      <div className="max-w-7xl mx-auto h-full flex flex-col justify-between">
+      <div className="absolute top-0 left-8 right-8 h-[2px] bg-cyan-400 shadow-[0_0_10px_#22d3ee,0_0_20px_#22d3ee,0_0_30px_#22d3ee]"></div>
+      
+      <div className="w-full h-full flex flex-col justify-between">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
           <div>
             <h3 className="text-sm uppercase tracking-widest text-gray-400 mb-6">NAVIGATION</h3>
@@ -63,8 +64,8 @@ const Footer = forwardRef<HTMLDivElement>((props, ref) => {
         <div className="space-y-8">
           <p className="text-4xl md:text-6xl lg:text-7xl font-light leading-tight">
             I believe in the power of <br className="hidden md:block" />
-            exciting brands and <br className="hidden md:block" />
-            thoughtful digital <br className="hidden md:block" />
+            <span className="text-cyan-400">quality testing</span> and <br className="hidden md:block" />
+            delivering flawless <br className="hidden md:block" />
             experiences.
           </p>
           <h2 className="text-4xl sm:text-2xl md:text-2xl lg:text-[12rem] xl:text-[15rem] font-bold w-full">
