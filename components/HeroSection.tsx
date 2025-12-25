@@ -5,17 +5,10 @@ interface HeroSectionProps {
   onMenuClick: () => void;
 }
 
-interface Ripple {
-  id: number;
-  x: number;
-  y: number;
-}
-
 export default function HeroSection({ onMenuClick }: HeroSectionProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
-  const [ripples, setRipples] = useState<Ripple[]>([]);
   const roles = ['Quality Analyst', 'Tosca Tester'];
   const staticText = ',\nfrom India.';
 
@@ -46,41 +39,8 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps) {
     return () => clearTimeout(timer);
   }, [displayedText, isDeleting, loopNum]);
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const newRipple: Ripple = {
-      id: Date.now(),
-      x: e.clientX,
-      y: e.clientY,
-    };
-
-    setRipples((prev) => [...prev, newRipple]);
-
-    // Remove ripple after animation completes
-    setTimeout(() => {
-      setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
-    }, 1500);
-  };
-
   return (
-    <div 
-      className="relative h-screen bg-black text-white overflow-hidden cursor-pointer"
-      onClick={handleClick}
-    >
-      {/* Click Ripple Effects */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {ripples.map((ripple) => (
-          <div
-            key={ripple.id}
-            className="absolute rounded-full border-2 border-cyan-400 animate-ripple-expand"
-            style={{
-              left: ripple.x,
-              top: ripple.y,
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
-        ))}
-      </div>
-
+    <div className="relative h-screen bg-black text-white overflow-hidden">
       <div className="relative z-10 pointer-events-none">
         <div className="pointer-events-auto">
           <Navbar onMenuClick={onMenuClick} />
@@ -89,12 +49,12 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps) {
         {/* Main Content */}
         <div className="h-[calc(100vh-80px)] flex flex-col justify-between pointer-events-none">
           {/* Header */}
-          <header className="px-8 pt-4">
-            <h1 className="text-5xl md:text-9xl lg:text-[12rem] font-bold">IamVysakh</h1>
+          <header className="px-8 pt-20 md:pt-4">
+            <h1 className="text-6xl md:text-9xl lg:text-[12rem] font-bold">IamVysakh</h1>
           </header>
 
           {/* Bottom Section with Text and Buttons */}
-          <div className="p-4 md:p-8 pb-28 md:pb-36">
+          <div className="p-4 md:p-8 pb-15 md:pb-36">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
               {/* Left: Typing Text */}
               <div className="flex-1">
@@ -126,28 +86,6 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps) {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes ripple-expand {
-          0% {
-            width: 0;
-            height: 0;
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.6;
-          }
-          100% {
-            width: 600px;
-            height: 600px;
-            opacity: 0;
-          }
-        }
-
-        .animate-ripple-expand {
-          animation: ripple-expand 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-      `}</style>
     </div>
   );
 }
