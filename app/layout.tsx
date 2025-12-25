@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Saira } from "next/font/google";
 import "./globals.css";
+import CustomCursor from "@/components/mouse"; // Adjust path as needed
 
 const saira = Saira({
   variable: "--font-saira",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${saira.variable} antialiased`}>
+        <CustomCursor />
         {children}
       </body>
     </html>
