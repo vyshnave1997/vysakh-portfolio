@@ -1,10 +1,4 @@
-'use client';
-
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect, useRef, useState } from 'react';
 
 const certifications = [
   {
@@ -63,22 +57,54 @@ export default function CertificationsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initial card animation on mount
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const loadGSAP = async () => {
+      if (typeof window === 'undefined') return;
+      
+      if ((window as any).gsap && (window as any).ScrollTrigger) {
+        initAnimation();
+        return;
+      }
+
+      const gsapScript = document.createElement('script');
+      gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
+      gsapScript.async = true;
+      document.head.appendChild(gsapScript);
+
+      gsapScript.onload = () => {
+        const scrollTriggerScript = document.createElement('script');
+        scrollTriggerScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js';
+        scrollTriggerScript.async = true;
+        document.head.appendChild(scrollTriggerScript);
+
+        scrollTriggerScript.onload = () => {
+          initAnimation();
+        };
+      };
+    };
+
+    const initAnimation = () => {
+      const gsap = (window as any).gsap;
+      const ScrollTrigger = (window as any).ScrollTrigger;
+
+      if (!gsap || !ScrollTrigger) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
       cardRefs.current.forEach((card, index) => {
         if (card) {
+          // Initial book spine appearance
           gsap.fromTo(
             card,
             {
               opacity: 0,
-              y: 100,
-              rotateX: -45,
+              rotateY: -90,
+              x: -200,
             },
             {
               opacity: 1,
-              y: 0,
-              rotateX: 0,
+              rotateY: 0,
+              x: 0,
               duration: 0.8,
               delay: index * 0.1,
               ease: 'power3.out',
@@ -90,24 +116,47 @@ export default function CertificationsSection() {
             }
           );
 
-          // Floating animation
-          gsap.to(card, {
-            y: -10,
-            duration: 2 + index * 0.2,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: index * 0.15,
+          // Hover effect - increase height
+          card.addEventListener('mouseenter', () => {
+            if (selectedCard !== index) {
+              gsap.to(card, {
+                height: '550px',
+                y: -25,
+                duration: 0.4,
+                ease: 'power2.out'
+              });
+            }
+          });
+
+          card.addEventListener('mouseleave', () => {
+            if (selectedCard !== index) {
+              gsap.to(card, {
+                height: '500px',
+                y: 0,
+                duration: 0.4,
+                ease: 'power2.out'
+              });
+            }
           });
         }
       });
-    });
+    };
 
-    return () => ctx.revert();
+    loadGSAP();
+
+    return () => {
+      if (typeof window !== 'undefined' && (window as any).ScrollTrigger) {
+        const triggers = (window as any).ScrollTrigger.getAll();
+        triggers.forEach((trigger: any) => trigger.kill());
+      }
+    };
   }, []);
 
   useEffect(() => {
-    // Clear any existing timeout
+    if (typeof window === 'undefined' || !(window as any).gsap) return;
+    
+    const gsap = (window as any).gsap;
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -116,89 +165,75 @@ export default function CertificationsSection() {
       const selectedCardElement = cardRefs.current[selectedCard];
       
       if (selectedCardElement) {
-        // Calculate position adjustment to keep card centered in viewport
         const expandedWidth = 500;
-        const currentWidth = 120;
-        const widthDifference = expandedWidth - currentWidth;
         
-        let translateX = 0;
-        
-        // If card is on the left side, shift it right
-        if (selectedCard < 3) {
-          translateX = widthDifference / 2;
-        }
-        // If card is on the right side, shift it left
-        else if (selectedCard > 4) {
-          translateX = -widthDifference / 2;
-        }
-        
-        // Expand animation with rotation
+        // Book opening animation
         gsap.to(selectedCardElement, {
           width: `${expandedWidth}px`,
           height: '400px',
-          x: translateX,
-          rotateY: 360,
-          duration: 0.6,
-          ease: 'power3.out',
+          rotateY: 0,
+          duration: 0.8,
+          ease: 'power3.inOut',
           zIndex: 50,
-          onComplete: () => {
-            gsap.set(selectedCardElement, { rotateY: 0 });
-          }
+          transformOrigin: 'left center',
         });
 
-        // Animate content fade in
+        // Animate content fade in like pages turning
         const contentElements = selectedCardElement.querySelectorAll('.card-content > *');
         gsap.fromTo(
           contentElements,
-          { opacity: 0, y: 20 },
+          { opacity: 0, x: -30, rotateY: -20 },
           { 
             opacity: 1, 
-            y: 0, 
-            duration: 0.4, 
-            stagger: 0.1,
-            delay: 0.4,
+            x: 0,
+            rotateY: 0,
+            duration: 0.6, 
+            stagger: 0.08,
+            delay: 0.5,
             ease: 'power2.out' 
           }
         );
       }
       
-      // Animate other cards
+      // Other books lean away
       cardRefs.current.forEach((card, i) => {
         if (i !== selectedCard && card) {
+          const direction = i < selectedCard ? -1 : 1;
           gsap.to(card, {
-            opacity: 0.3,
-            scale: 0.95,
-            rotateY: i < selectedCard ? -5 : 5,
-            duration: 0.4,
-            ease: 'power2.out'
+            opacity: 0.4,
+            scaleX: 0.95,
+            rotateY: direction * 8,
+            x: direction * 20,
+            duration: 0.5,
+            ease: 'power2.out',
+            transformOrigin: 'center center'
           });
         }
       });
 
-      // Auto-close after 5 seconds
       timeoutRef.current = setTimeout(() => {
         setSelectedCard(null);
-      }, 2000);
+      }, 3000);
     } else {
-      // Close animation
-      cardRefs.current.forEach((card, i) => {
+      // Book closing animation
+      cardRefs.current.forEach((card) => {
         if (card) {
           gsap.to(card, {
             width: '120px',
             height: '500px',
             x: 0,
             opacity: 1,
-            scale: 1,
+            scaleX: 1,
             rotateY: 0,
-            duration: 0.5,
+            duration: 0.6,
             ease: 'power3.inOut',
-            zIndex: 1
+            zIndex: 1,
+            transformOrigin: 'left center'
           });
         }
       });
     }
 
-    // Cleanup timeout on unmount
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -207,11 +242,16 @@ export default function CertificationsSection() {
   }, [selectedCard]);
 
   const handleCardClick = (index: number) => {
-    // Add click animation
+    if (typeof window === 'undefined' || !(window as any).gsap) return;
+    
+    const gsap = (window as any).gsap;
     const clickedCard = cardRefs.current[index];
+    
     if (clickedCard && selectedCard !== index) {
+      // Book pull animation
       gsap.to(clickedCard, {
-        scale: 1.05,
+        scaleX: 1.1,
+        x: 10,
         duration: 0.2,
         yoyo: true,
         repeat: 1,
@@ -247,17 +287,32 @@ export default function CertificationsSection() {
           ))}
         </div>
 
-        {/* Desktop Vertical Tray */}
+        {/* Desktop Bookshelf */}
         <div className="hidden lg:block relative mt-20">
-          {/* Cyan Bottom Container */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-cyan-500/20 to-transparent rounded-3xl backdrop-blur-sm border-t border-cyan-500/30 z-30"></div>
+          {/* Wooden shelf effect */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-cyan-900/40 to-black/60 rounded-lg backdrop-blur-sm border-t-2 border-cyan-700/50 z-30 shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-700/20 to-transparent"></div>
+          </div>
           
           <div 
             ref={containerRef}
-            className="relative flex gap-6 pb-8 pt-12 justify-center overflow-hidden"
+            className="relative flex gap-3 pb-8 pt-12 justify-center"
+            style={{ perspective: '2000px' }}
           >
           {certifications.map((cert, index) => {
             const isSelected = selectedCard === index;
+            
+            // Book spine colors
+            const spineColors = [
+              'from-cyan-900 to-black',
+              'from-cyan-800 to-gray-900',
+              'from-gray-900 to-black',
+              'from-cyan-700 to-gray-800',
+              'from-black to-cyan-900',
+              'from-gray-800 to-black',
+              'from-cyan-900 to-gray-900',
+              'from-gray-900 to-cyan-800'
+            ];
             
             return (
               <div
@@ -266,43 +321,43 @@ export default function CertificationsSection() {
                   cardRefs.current[index] = el;
                 }}
                 onClick={() => handleCardClick(index)}
-                className="relative bg-gray-900 rounded-2xl cursor-pointer flex-shrink-0 overflow-hidden group"
+                className={`relative bg-gradient-to-r ${spineColors[index]} rounded-r-xl cursor-pointer flex-shrink-0 overflow-hidden group shadow-2xl`}
                 style={{
                   width: '120px',
                   height: '500px',
-                  zIndex: isSelected ? 100 : 10
+                  zIndex: isSelected ? 100 : 10,
+                  transformStyle: 'preserve-3d',
+                  boxShadow: isSelected 
+                    ? '0 20px 60px rgba(0,0,0,0.8), inset -5px 0 15px rgba(0,0,0,0.5)' 
+                    : 'inset -5px 0 15px rgba(0,0,0,0.5), 5px 5px 20px rgba(0,0,0,0.6)'
                 }}
               >
-                {/* Gradient border on hover */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white via-cyan-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
-                     style={{ padding: '2px' }}>
-                  <div className="absolute inset-[2px] bg-gray-900 rounded-2xl"></div>
+                {/* Book spine texture */}
+                <div className="absolute inset-0 opacity-20" 
+                     style={{
+                       backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
+                     }}>
                 </div>
+
+                {/* Gilded edge effect */}
+                <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 via-cyan-300 to-cyan-400 opacity-70"></div>
                 
-                {/* Animated gradient border for selected card */}
-                {isSelected && (
-                  <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-r from-white via-cyan-400 to-white" 
-                         style={{ 
-                           padding: '2px',
-                           backgroundSize: '200% 200%',
-                           animation: 'borderFlow 3s linear infinite'
-                         }}>
-                      <div className="absolute inset-[2px] bg-gray-900 rounded-2xl"></div>
-                    </div>
-                  </div>
-                )}
+                {/* Leather texture overlay */}
+                <div className="absolute inset-0 opacity-10 mix-blend-overlay"
+                     style={{
+                       backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.4\'/%3E%3C/svg%3E")',
+                     }}>
+                </div>
 
                 <div 
                   className="relative z-10 h-full"
                   style={{
                     writingMode: isSelected ? 'horizontal-tb' : 'vertical-rl',
                     textOrientation: 'mixed',
-                    perspective: '1000px'
                   }}
                 >
                   {isSelected ? (
-                    <div className="p-8 h-full flex flex-col justify-between card-content">
+                    <div className="p-8 h-full flex flex-col justify-between card-content bg-gradient-to-br from-gray-900 to-gray-800 rounded-r-xl">
                       <div>
                         <div className="text-cyan-400 text-sm uppercase tracking-widest mb-4">{cert.year}</div>
                         <h3 className="text-3xl font-bold mb-4">{cert.title}</h3>
@@ -326,10 +381,12 @@ export default function CertificationsSection() {
                       </button>
                     </div>
                   ) : (
-                    <div className="p-6 h-full flex items-center justify-center hover:bg-gray-800 transition-all hover:shadow-lg hover:shadow-cyan-500/20">
+                    <div className="p-4 h-full flex items-center justify-center group-hover:bg-cyan-500/10 transition-all">
                       <div className="text-center">
-                        <div className="text-cyan-400 text-xs uppercase tracking-widest mb-3 rotate-180">{cert.year}</div>
-                        <h3 className="text-xl font-bold mb-2 rotate-180">{cert.title}</h3>
+                        <div className="text-cyan-400 text-xs uppercase tracking-widest mb-3 rotate-180 font-bold">{cert.year}</div>
+                        <h3 className="text-lg font-bold rotate-180 leading-tight px-2" style={{ letterSpacing: '0.05em' }}>
+                          {cert.title}
+                        </h3>
                       </div>
                     </div>
                   )}
@@ -340,20 +397,6 @@ export default function CertificationsSection() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes borderFlow {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
     </div>
   );
 }
