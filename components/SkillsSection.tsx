@@ -95,9 +95,16 @@ const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingR
         }
       );
 
-      // Move entire heading left to right on scroll (only to middle)
+      // Move only the text content left to right on scroll (inline-block for width constraint)
+      gsap.set(headingRef.current, { display: 'inline-block' });
+      
       gsap.to(headingRef.current, {
-        x: '30vw',
+        x: () => {
+          const textWidth = headingRef.current?.offsetWidth || 0;
+          const viewportWidth = window.innerWidth;
+          const maxMovement = Math.min(viewportWidth * 0.3, 400);
+          return maxMovement;
+        },
         scrollTrigger: {
           trigger: sectionElement,
           start: 'top center',
@@ -185,13 +192,15 @@ const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingR
       id="skills-section"
     >
       <div className="max-w-7xl mx-auto">
-        <h2 
-          ref={headingRef}
-          className="text-5xl md:text-7xl font-bold text-black mb-16"
-          style={{ perspective: '1000px' }}
-        >
-          Technologies I'm Good With
-        </h2>
+        <div className="mb-16">
+          <h2 
+            ref={headingRef}
+            className="text-5xl md:text-7xl font-bold text-black"
+            style={{ perspective: '1000px' }}
+          >
+            Technologies I'm Good With
+          </h2>
+        </div>
         
         {/* Skills Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
