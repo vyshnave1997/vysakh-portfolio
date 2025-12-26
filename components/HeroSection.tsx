@@ -50,12 +50,12 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps) {
         <div className="h-[calc(100vh-80px)] flex flex-col justify-start md:justify-between pointer-events-none">
           {/* Header */}
           <header className="px-8 pt-20 md:pt-4">
-            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[12rem] font-bold">iamvysakh</h1>
+            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[12rem] font-extrabold lg:font-black">iamvysakh</h1>
           </header>
 
           {/* Bottom Section with Text and Buttons */}
-          <div className="p-4 md:p-8 pb-15 md:pb-36 mt-auto md:mt-0" style={{ marginTop: 'min(10vh, calc(100vh - 400px))' }}>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 md:gap-8">
+          <div className="p-4 md:p-8 pb-20 md:pb-36 mt-auto md:mt-0" style={{ marginTop: 'min(10vh, calc(100vh - 400px))' }}>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-16 md:gap-8">
               {/* Left: Typing Text */}
               <div className="flex-1">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-light leading-tight whitespace-pre-line">
@@ -69,7 +69,7 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps) {
               <div className="flex gap-4 pointer-events-auto">
                 <a 
                   href="#info" 
-                  className="group flex items-center gap-3 px-8 py-4 bg-cyan-400 text-black rounded-full font-medium text-lg hover:bg-cyan-300 transition-all duration-300 hover:gap-5"
+                  className="group flex items-center gap-3 px-8 py-4 bg-transparent border-2 border-cyan-400 text-cyan-400 rounded-full font-medium text-lg hover:bg-cyan-400 hover:text-black transition-all duration-300 hover:gap-5"
                 >
                   <span>Connect</span>
                   <svg 
