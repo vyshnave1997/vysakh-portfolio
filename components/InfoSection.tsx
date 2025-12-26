@@ -39,18 +39,11 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
       id: 'linkedin',
       icon: Linkedin,
       label: 'LinkedIn',
-      value: 'linkedin.com/in/yourprofile',
-      link: 'https://linkedin.com/in/yourprofile',
+      value: 'linkedin.com/in/vysakhk',
+      link: 'https://linkedin.com/in/vysakhk',
       action: 'link'
     },
-    {
-      id: 'github',
-      icon: Github,
-      label: 'GitHub',
-      value: 'github.com/yourusername',
-      link: 'https://github.com/yourusername',
-      action: 'link'
-    }
+    
   ];
 
   const handleCopyToClipboard = async (text: string, id: string) => {

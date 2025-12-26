@@ -2,7 +2,7 @@ import { forwardRef, useEffect } from 'react';
 
 const skills = [
   'Tricentis Tosca', 'SAP Automation', 'Mainframe Automation', 'Selenium', 
-  'Jira', 'Jenkins', 'Manual Testing', 'HP-ALM', 'Postman', 'API / Database'
+  'Jira / X-ray', 'Jenkins / CICD', 'Manual Testing', 'Qtest / HP-ALM', 'Postman', 'API / Database'
 ];
 
 interface SkillsSectionProps {
