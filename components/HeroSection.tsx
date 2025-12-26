@@ -309,13 +309,13 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps = {}) {
         <div className="flex-1 flex flex-col justify-between px-8 py-8 pb-20">
           {/* Header */}
           <header className="pt-4">
-            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[12rem] font-extrabold lg:font-black">
-              iamvysakh
+            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[14rem] font-extrabold lg:font-black leading-tight lg:leading-[0.85]">
+              iam<span className="md:inline block">vysakh</span>
             </h1>
           </header>
 
           {/* Bottom Section */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-16 md:gap-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-16">
             {/* Left: Typing Text */}
             <div className="flex-1">
               <h2 className="text-2xl md:text-4xl lg:text-5xl font-light leading-tight whitespace-pre-line">

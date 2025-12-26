@@ -415,10 +415,10 @@ export default function CustomCursor() {
         );
       })}
 
-      {/* Idle Messages - Progressive - LEFT SIDE */}
+      {/* Idle Messages - Progressive - LEFT SIDE - Hidden on small/medium devices */}
       {idleStage > 0 && (
         <div
-          className="fixed pointer-events-none z-[10001]"
+          className="fixed pointer-events-none z-[10001] hidden lg:block"
           style={{
             left: `${outlinePos.x}px`,
             top: `${outlinePos.y}px`,
@@ -458,10 +458,10 @@ export default function CustomCursor() {
         </div>
       )}
 
-      {/* Navigation Prompt - 15 seconds - RIGHT SIDE */}
+      {/* Navigation Prompt - 15 seconds - RIGHT SIDE - Hidden on small/medium devices */}
       {showNavPrompt && !contextMenu && (
         <div
-          className="fixed pointer-events-none z-[10001]"
+          className="fixed pointer-events-none z-[10001] hidden lg:block"
           style={{
             left: `${outlinePos.x}px`,
             top: `${outlinePos.y}px`,
