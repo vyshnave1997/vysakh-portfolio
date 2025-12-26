@@ -1,15 +1,30 @@
 import { useEffect, useRef } from 'react';
 
 const services = [
-  { id: '01', title: 'Test Automation', description: 'Building robust automated test suites with Selenium, Tosca, and Python' },
-  { id: '02', title: 'Manual Testing & QA', description: 'Comprehensive testing strategies and quality assurance processes' },
-  { id: '03', title: 'Performance Testing', description: 'Load and stress testing with LoadRunner and performance optimization' },
-  { id: '04', title: 'API Testing', description: 'RESTful API testing and validation using Postman and custom frameworks' },
-  { id: '05', title: 'CI/CD Integration', description: 'Automated testing pipelines with Jenkins and continuous deployment' },
-  { id: '06', title: 'Database Testing', description: 'SQL query validation and data integrity verification' },
-  { id: '07', title: 'Test Strategy', description: 'Comprehensive test planning and agile methodology implementation' },
-  { id: '08', title: 'Bug Tracking', description: 'Efficient defect management using JIRA and TestRail' },
-  { id: '09', title: 'Quality Metrics', description: 'Test coverage analysis and quality reporting dashboards' }
+  { id: '01', title: 'Tosca Automation', description: 'Expertise in Tricentis Tosca versions 13-16 with Vision AI for comprehensive test automation' },
+  { id: '02', title: 'SAP Testing', description: 'Automated and manual testing of SAP applications with Tosca' },
+  { id: '03', title: 'Mainframe Automation', description: 'Specialized in mainframe application testing using Tosca automation' },
+  { id: '04', title: 'Module Scanning', description: 'Efficient module scanning, test case design, and TCD development' },
+  { id: '05', title: 'CI/CD Integration', description: 'Jenkins pipeline integration for continuous testing and deployment' },
+  { id: '06', title: 'Test Management', description: 'Proficient in ALM, JIRA Xray for test planning and execution tracking' },
+  { id: '07', title: 'Oracle Cloud', description: 'Patch release automation for Oracle Cloud applications (22A-23A)' },
+  { id: '08', title: 'API Testing', description: 'RESTful API testing and database validation with Postman' },
+  { id: '09', title: 'Quality Assurance', description: 'Comprehensive test requirement analysis and quality metrics reporting' }
+];
+
+const workExperience = [
+  {
+    company: 'Planit Testing India Pvt Ltd',
+    period: 'January 2025 - Present',
+    role: 'Senior Test Automation Engineer',
+    description: 'Domain: SCM, Logistics'
+  },
+  {
+    company: 'Vaisesika Consulting PVT Ltd',
+    period: 'August 2021 - January 2025',
+    role: 'Associate Software Engineer',
+    description: 'Domain: Life Science'
+  }
 ];
 
 export default function ExperienceSection() {
@@ -172,58 +187,30 @@ export default function ExperienceSection() {
         });
       });
 
-      // Modern 3D card flip and parallax effect for value cards
+      // Modern card animations for work experience
       if (valueCards && valueCards.length > 0) {
         valueCards.forEach((card: any, index: number) => {
-          // Initial state - cards start rotated and scaled down
-          gsap.set(card, {
-            rotationY: -90,
-            scale: 0.8,
-            opacity: 0,
-            transformPerspective: 1000,
-            transformOrigin: 'left center'
-          });
-
-          // 3D flip in animation with stagger
-          gsap.to(card, {
-            rotationY: 0,
-            scale: 1,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'back.out(1.4)',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse'
+          // Simple fade up animation with stagger
+          gsap.fromTo(card,
+            {
+              opacity: 0,
+              y: 50,
+              scale: 0.95
             },
-            delay: index * 0.2
-          });
-
-          // Parallax scroll effect - cards move at different speeds
-          gsap.to(card, {
-            y: -50 * (index + 1),
-            ease: 'none',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.5
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+              },
+              delay: index * 0.15
             }
-          });
-
-          // Hover-like scale effect on scroll proximity
-          gsap.to(card, {
-            scale: 1.05,
-            boxShadow: '0 20px 40px rgba(34, 211, 238, 0.3)',
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 60%',
-              end: 'top 40%',
-              scrub: 1,
-              toggleActions: 'play reverse play reverse'
-            }
-          });
+          );
         });
       }
     };
@@ -247,7 +234,7 @@ export default function ExperienceSection() {
   };
 
   return (
-    <div ref={sectionRef} className="relative w-full bg-gray-50 text-black py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10" style={{ minHeight: '200vh' }}>
+    <div id="experience" ref={sectionRef} className="relative w-full bg-gray-50 text-black py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10" style={{ minHeight: '200vh' }}>
       <div className="w-full">
         {/* Header Section */}
         <div className="mb-12 sm:mb-14 md:mb-16 sticky top-12 sm:top-16 md:top-20">
@@ -281,28 +268,28 @@ export default function ExperienceSection() {
             </div>
           </div>
 
-          {/* Right Side - Value Proposition */}
+          {/* Right Side - Work Experience */}
           <div className="lg:sticky lg:top-28 xl:top-40 h-fit">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-gray-500 mb-3 sm:mb-4">WHAT I CAN DO FOR YOUR TEAM</p>
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-gray-500 mb-3 sm:mb-4">PREVIOUS WORKSPACES</p>
             <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 sm:mb-8">
-              I ensure <span className="bg-cyan-400 px-1 sm:px-2">reliable</span> software quality that helps teams deliver with confidence.
+              Building Quality <span className="bg-cyan-400 px-1 sm:px-2">Excellence</span> Across Organizations
             </h3>
             
             <div className="mt-8 sm:mt-10 md:mt-12 space-y-4 sm:space-y-6">
-              <div className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="font-bold text-lg sm:text-xl mb-1 sm:mb-2">8+ Years Experience</h4>
-                <p className="text-gray-600 text-sm sm:text-base">Delivering quality solutions across multiple industries</p>
-              </div>
-              
-              <div className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="font-bold text-lg sm:text-xl mb-1 sm:mb-2">End-to-End Testing</h4>
-                <p className="text-gray-600 text-sm sm:text-base">From test strategy to automation implementation</p>
-              </div>
-              
-              <div className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="font-bold text-lg sm:text-xl mb-1 sm:mb-2">Agile Methodology</h4>
-                <p className="text-gray-600 text-sm sm:text-base">Seamless integration with development teams</p>
-              </div>
+              {workExperience.map((work, index) => (
+                <div 
+                  key={index} 
+                  className="value-card bg-white p-4 sm:p-5 md:p-6 rounded-lg border border-gray-200"
+                  style={{ boxShadow: '0 4px 12px rgba(6, 182, 212, 0.15)' }}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-lg sm:text-xl">{work.company}</h4>
+                    <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap ml-2">{work.period}</span>
+                  </div>
+                  <p className="text-cyan-400 font-medium text-sm sm:text-base mb-1">{work.role}</p>
+                  <p className="text-gray-600 text-sm sm:text-base">{work.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

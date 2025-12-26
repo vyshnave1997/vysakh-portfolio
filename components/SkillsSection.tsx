@@ -1,8 +1,8 @@
 import { forwardRef, useEffect } from 'react';
 
 const skills = [
-  'Tosca', 'Selenium', 'JIRA', 'API Testing', 'SQL', 'Postman',
-  'TestRail', 'Agile', 'Jenkins', 'Git', 'LoadRunner', 'Python'
+  'Tricentis Tosca', 'SAP Automation', 'Mainframe Automation', 'Selenium', 
+  'Jira', 'Jenkins', 'Manual Testing', 'HP-ALM', 'Postman', 'API / Database'
 ];
 
 interface SkillsSectionProps {
@@ -100,8 +100,9 @@ const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingR
       gsap.to(headingRef.current, {
         x: () => {
           const viewportWidth = window.innerWidth;
+          const headingWidth = headingRef.current?.offsetWidth || 0;
           const maxMovement = isMobile 
-            ? Math.min(viewportWidth * 0.15, 100) 
+            ? Math.max(0, Math.min(viewportWidth - headingWidth - 32, viewportWidth * 0.15))
             : Math.min(viewportWidth * 0.3, 400);
           return maxMovement;
         },
@@ -174,8 +175,8 @@ const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingR
   return (
     <div 
       ref={ref}
+      id="skills"
       className="relative w-full min-h-screen bg-white text-black py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10" 
-      id="skills-section"
     >
       <div className="w-full">
         <div className="mb-10 sm:mb-12 md:mb-16">
@@ -189,7 +190,7 @@ const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingR
         </div>
         
         {/* Skills Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
           {skills.map((skill) => (
             <div 
               key={skill}
@@ -203,7 +204,7 @@ const SkillsSection = forwardRef<HTMLDivElement, SkillsSectionProps>(({ headingR
                 <div className="bg-gray-100 w-full h-full rounded-xl sm:rounded-2xl"></div>
               </div>
               <div className="text-center relative z-10">
-                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light">{skill}</div>
+                <div className="text-sm sm:text-base md:text-lg lg:text-xl font-light">{skill}</div>
               </div>
             </div>
           ))}
