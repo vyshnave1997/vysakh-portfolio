@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Rocket, MessageCircle } from 'lucide-react';
+import { Rocket, MessageCircle, Home, User, Briefcase, FolderOpen, Link2, RotateCw } from 'lucide-react';
 
 export default function CustomCursor() {
   const cursorDotRef = useRef<HTMLDivElement>(null);
@@ -12,10 +12,38 @@ export default function CustomCursor() {
   const [trail, setTrail] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const [isIdle, setIsIdle] = useState(false);
   const [particles, setParticles] = useState<Array<{ id: number; angle: number }>>([]);
-  const [idleStage, setIdleStage] = useState(0); // 0: no message, 1: 20s message, 2: 40s message
+  const [idleStage, setIdleStage] = useState(0);
+  const [outlinePos, setOutlinePos] = useState({ x: 0, y: 0 });
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+  const [showNavPrompt, setShowNavPrompt] = useState(false);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const message1TimerRef = useRef<NodeJS.Timeout | null>(null);
   const message2TimerRef = useRef<NodeJS.Timeout | null>(null);
+  const message3TimerRef = useRef<NodeJS.Timeout | null>(null);
+  const navPromptTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const menuItems = [
+    { icon: RotateCw, label: 'Reload', action: () => window.location.reload() },
+    { icon: Home, label: 'Home', action: () => scrollToSection('home') },
+    { icon: User, label: 'Info', action: () => scrollToSection('info') },
+    { icon: Briefcase, label: 'Skills', action: () => scrollToSection('skills') },
+    { icon: Briefcase, label: 'Experience', action: () => scrollToSection('experience') },
+    { icon: FolderOpen, label: 'Projects', action: () => scrollToSection('projects') },
+    { icon: Link2, label: 'Copy Link', action: () => copyLink() },
+  ];
+
+  const scrollToSection = (section: string) => {
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setContextMenu(null);
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setContextMenu(null);
+  };
 
   const getIdleMessage = () => {
     switch(idleStage) {
@@ -23,6 +51,8 @@ export default function CustomCursor() {
         return "Let's go to a new section!";
       case 2:
         return "Let's connect!";
+      case 3:
+        return "Hey, are you there?";
       default:
         return "";
     }
@@ -43,14 +73,16 @@ export default function CustomCursor() {
       setIsIdle(false);
       setIdleStage(0);
       setParticles([]);
+      setShowNavPrompt(false);
       
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       if (message1TimerRef.current) clearTimeout(message1TimerRef.current);
       if (message2TimerRef.current) clearTimeout(message2TimerRef.current);
+      if (message3TimerRef.current) clearTimeout(message3TimerRef.current);
+      if (navPromptTimerRef.current) clearTimeout(navPromptTimerRef.current);
     };
 
     const startIdleTimers = () => {
-      // Start idle animation after 2 seconds
       idleTimerRef.current = setTimeout(() => {
         setIsIdle(true);
         const newParticles = Array.from({ length: 6 }, (_, i) => ({
@@ -60,30 +92,34 @@ export default function CustomCursor() {
         setParticles(newParticles);
       }, 2000);
 
-      // Show first message after 20 seconds
+      // Show navigation prompt after 15 seconds
+      navPromptTimerRef.current = setTimeout(() => {
+        setShowNavPrompt(true);
+      }, 15000);
+
       message1TimerRef.current = setTimeout(() => {
         setIdleStage(1);
       }, 20000);
 
-      // Show second message after 40 seconds
       message2TimerRef.current = setTimeout(() => {
         setIdleStage(2);
       }, 40000);
+
+      message3TimerRef.current = setTimeout(() => {
+        setIdleStage(3);
+      }, 60000);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Reset idle state and timers
       resetIdleTimers();
       startIdleTimers();
 
-      // Update dot position immediately
       cursorDot.style.left = `${mouseX}px`;
       cursorDot.style.top = `${mouseY}px`;
 
-      // Check if hovering over interactive elements
       const target = e.target as HTMLElement;
       const isInteractive = target.closest('a, button, input, textarea, select, [role="button"], .cursor-pointer');
       setIsPointer(!!isInteractive);
@@ -108,7 +144,21 @@ export default function CustomCursor() {
       startIdleTimers();
     };
 
-    // Create trailing effect
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      setContextMenu({ x: e.clientX, y: e.clientY });
+      resetIdleTimers();
+      startIdleTimers();
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.context-menu')) {
+        setContextMenu(null);
+      }
+      handleActivity();
+    };
+
     let trailCounter = 0;
     const createTrail = () => {
       trailCounter++;
@@ -124,7 +174,6 @@ export default function CustomCursor() {
       }
     };
 
-    // Animate outline with faster follow effect
     const animateOutline = () => {
       const distX = mouseX - outlineX;
       const distY = mouseY - outlineY;
@@ -134,6 +183,8 @@ export default function CustomCursor() {
 
       cursorOutline.style.left = `${outlineX}px`;
       cursorOutline.style.top = `${outlineY}px`;
+      
+      setOutlinePos({ x: outlineX, y: outlineY });
 
       createTrail();
 
@@ -145,7 +196,8 @@ export default function CustomCursor() {
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('click', handleActivity);
+    document.addEventListener('click', handleClick);
+    document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('keypress', handleActivity);
     document.addEventListener('scroll', handleActivity);
     
@@ -158,12 +210,15 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('click', handleActivity);
+      document.removeEventListener('click', handleClick);
+      document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keypress', handleActivity);
       document.removeEventListener('scroll', handleActivity);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       if (message1TimerRef.current) clearTimeout(message1TimerRef.current);
       if (message2TimerRef.current) clearTimeout(message2TimerRef.current);
+      if (message3TimerRef.current) clearTimeout(message3TimerRef.current);
+      if (navPromptTimerRef.current) clearTimeout(navPromptTimerRef.current);
     };
   }, []);
 
@@ -257,6 +312,17 @@ export default function CustomCursor() {
             transform: translate(-50%, -50%) scale(1.1);
           }
         }
+
+        @keyframes menuSlideIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.9) translateY(-10px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
       `}</style>
 
       {/* Cursor Dot - Triangle */}
@@ -330,16 +396,13 @@ export default function CustomCursor() {
 
       {/* Idle State - Orbiting Particles */}
       {isIdle && particles.map((particle, index) => {
-        const outlineLeft = cursorOutlineRef.current?.style.left || '0px';
-        const outlineTop = cursorOutlineRef.current?.style.top || '0px';
-        
         return (
           <div
             key={particle.id}
             className="fixed pointer-events-none z-[9997]"
             style={{
-              left: outlineLeft,
-              top: outlineTop,
+              left: `${outlinePos.x}px`,
+              top: `${outlinePos.y}px`,
               width: '6px',
               height: '6px',
               backgroundColor: '#22d3ee',
@@ -352,45 +415,122 @@ export default function CustomCursor() {
         );
       })}
 
-      {/* Idle Messages - Progressive */}
+      {/* Idle Messages - Progressive - LEFT SIDE */}
       {idleStage > 0 && (
         <div
-          ref={cursorOutlineRef}
-          className="fixed pointer-events-none z-[10001] whitespace-nowrap"
+          className="fixed pointer-events-none z-[10001]"
           style={{
-            left: cursorOutlineRef.current?.style.left,
-            top: cursorOutlineRef.current?.style.top,
-            animation: 'slideIn 0.5s ease-out, float 2s ease-in-out infinite',
-            animationDelay: '0s, 0.5s',
+            left: `${outlinePos.x}px`,
+            top: `${outlinePos.y}px`,
+            transform: 'translate(-100%, -50%)',
+            marginLeft: '70px'
           }}
         >
           <div className="relative">
-            {/* Speech Bubble */}
             <div 
-              className="bg-transparent border-2 border-cyan-400 text-cyan-400 px-4 py-2 rounded-lg shadow-lg transform -translate-x-1/2 -translate-y-full mb-16 backdrop-blur-sm"
+              className="bg-transparent border-2 border-cyan-400 text-cyan-400 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm"
               style={{
-                animation: 'bounce 0.6s ease-in-out 3',
-                boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)'
+                animation: 'float 2s ease-in-out infinite, bounce 0.6s ease-in-out 3',
+                animationDelay: '0s, 0s',
+                boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
+                whiteSpace: 'nowrap'
               }}
             >
               <p className="text-sm font-medium flex items-center gap-2">
-                {idleStage === 1 ? <Rocket className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
+                {idleStage === 1 ? <Rocket className="w-4 h-4" /> : idleStage === 2 ? <MessageCircle className="w-4 h-4" /> : <MessageCircle className="w-4 h-4 animate-pulse" />}
                 {getIdleMessage()}
               </p>
-              {/* Tail */}
-              <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-full">
-                <div
-                  style={{
-                    width: 0,
-                    height: 0,
-                    borderLeft: '8px solid transparent',
-                    borderRight: '8px solid transparent',
-                    borderTop: '8px solid #22d3ee',
-                  }}
-                />
-              </div>
+              <div 
+                className="absolute"
+                style={{
+                  right: '-8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: 0,
+                  height: 0,
+                  borderTop: '8px solid transparent',
+                  borderBottom: '8px solid transparent',
+                  borderLeft: '8px solid #22d3ee',
+                }}
+              />
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Navigation Prompt - 15 seconds - RIGHT SIDE */}
+      {showNavPrompt && !contextMenu && (
+        <div
+          className="fixed pointer-events-none z-[10001]"
+          style={{
+            left: `${outlinePos.x}px`,
+            top: `${outlinePos.y}px`,
+            transform: 'translate(0, -50%)',
+            marginLeft: '140px'
+          }}
+        >
+          <div className="relative">
+            <div 
+              className="bg-transparent border-2 border-cyan-400 text-cyan-400 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm"
+              style={{
+                animation: 'float 2s ease-in-out infinite, bounce 0.6s ease-in-out 3',
+                animationDelay: '0s, 0s',
+                boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <p className="text-sm font-medium flex items-center gap-2">
+                <MessageCircle className="w-4 h-4" />
+                Right-click to navigate!
+              </p>
+              <div 
+                className="absolute"
+                style={{
+                  left: '-8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: 0,
+                  height: 0,
+                  borderTop: '8px solid transparent',
+                  borderBottom: '8px solid transparent',
+                  borderRight: '8px solid #22d3ee',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Context Menu */}
+      {contextMenu && (
+        <div
+          className="context-menu fixed z-[10002] bg-gray-900/95 backdrop-blur-md border-2 border-cyan-400 rounded-lg shadow-2xl overflow-hidden"
+          style={{
+            left: `${contextMenu.x}px`,
+            top: `${contextMenu.y}px`,
+            animation: 'menuSlideIn 0.2s ease-out',
+            boxShadow: '0 0 30px rgba(34, 211, 238, 0.3), 0 10px 50px rgba(0, 0, 0, 0.5)',
+            minWidth: '200px',
+          }}
+        >
+          {menuItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={index}
+                onClick={item.action}
+                className="w-full px-4 py-3 text-left text-cyan-400 hover:bg-cyan-400/20 transition-all duration-200 flex items-center gap-3 group cursor-pointer"
+                style={{
+                  borderBottom: index < menuItems.length - 1 ? '1px solid rgba(34, 211, 238, 0.2)' : 'none',
+                }}
+              >
+                <Icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
+                <span className="text-sm font-medium group-hover:translate-x-1 transition-transform duration-200">
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       )}
     </>
