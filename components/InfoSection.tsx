@@ -15,8 +15,9 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
   const getInTouchRef = useRef<HTMLHeadingElement>(null);
   const [copiedItem, setCopiedItem] = useState<string | null>(null);
   
-  const titleText = "Info";
-  const mainText = "I ensure quality and excellence";
+  const titleText = "About Me";
+  const mainTextLine1 = "I ensure quality";
+  const mainTextLine2 = "and excellence";
   const descriptionText = "I'm a dedicated Quality Analyst with 4.6+ years of specialized experience in Tricentis Tosca automation testing. From India, I'm passionate about ensuring software excellence through comprehensive automation frameworks. My expertise spans Tosca versions 13-16 with Vision AI, covering web-based, SAP, and Mainframe applications. Proficient in module scanning, test case design, TCD development, and test suite execution.";
 
   const contactItems = [
@@ -24,14 +25,14 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
       id: 'email',
       icon: Mail,
       label: 'Email',
-      value: 'your.email@example.com',
+      value: 'vysakhinbox@gmail.com',
       action: 'copy'
     },
     {
       id: 'phone',
       icon: Phone,
       label: 'Phone',
-      value: '+91 98765 43210',
+      value: '+91 8086422143',
       action: 'copy'
     },
     {
@@ -132,31 +133,35 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
 
       // Main text character animation with wave effect
       if (mainTextRef.current) {
-        const chars = mainTextRef.current.querySelectorAll('.char');
-        gsap.fromTo(
-          chars,
-          {
-            opacity: 0,
-            y: 50,
-            scale: 0.5
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: 'elastic.out(1, 0.5)',
-            stagger: {
-              amount: 0.8,
-              from: 'start'
+        const lines = mainTextRef.current.querySelectorAll('.quote-line');
+        lines.forEach((line: any, lineIndex: number) => {
+          const chars = line.querySelectorAll('.char');
+          gsap.fromTo(
+            chars,
+            {
+              opacity: 0,
+              y: 50,
+              scale: 0.5
             },
-            scrollTrigger: {
-              trigger: mainTextRef.current,
-              start: 'top 75%',
-              toggleActions: 'play none none reverse'
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: 'elastic.out(1, 0.5)',
+              stagger: {
+                amount: 0.8,
+                from: 'start'
+              },
+              delay: lineIndex * 0.3,
+              scrollTrigger: {
+                trigger: mainTextRef.current,
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+              }
             }
-          }
-        );
+          );
+        });
       }
 
       // Description character animation with fade-in
@@ -381,19 +386,21 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
             {/* Text Reveal Card with character animation */}
             <div className="relative overflow-hidden">
               <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight">
-                <div className="relative">
-                  {/* Background text */}
-                  <p className="text-gray-700">
-                    {mainText}
-                  </p>
-                  {/* Reveal text with character animation */}
-                  <p ref={mainTextRef} className="absolute top-0 left-0 text-cyan-400">
-                    {mainText.split('').map((char, index) => (
+                <div ref={mainTextRef} className="relative pl-4 sm:pl-6 md:pl-8 border-l-4 border-cyan-400">
+                  <div className="quote-line text-cyan-400 italic mb-2 lg:mb-0">
+                    {mainTextLine1.split('').map((char, index) => (
                       <span key={index} className="char inline-block">
                         {char === ' ' ? '\u00A0' : char}
                       </span>
                     ))}
-                  </p>
+                  </div>
+                  <div className="quote-line text-cyan-400 italic block lg:inline lg:ml-2">
+                    {mainTextLine2.split('').map((char, index) => (
+                      <span key={index} className="char inline-block">
+                        {char === ' ' ? '\u00A0' : char}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
