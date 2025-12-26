@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  onMenuClick?: () => void;
+}
+
+export default function HeroSection({ onMenuClick }: HeroSectionProps = {}) {
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
