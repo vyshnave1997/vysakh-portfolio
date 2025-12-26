@@ -54,6 +54,17 @@ export default function HeroSection() {
 
     camera.position.z = 5;
 
+    // Mouse position tracking
+    const mouse = new THREE.Vector2();
+    const targetMouse = new THREE.Vector2();
+    
+    const handleMouseMove = (event: MouseEvent) => {
+      targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+
     // Create star field with multiple colors
     const starGeometry = new THREE.BufferGeometry();
     const starCount = 3000;
@@ -150,6 +161,43 @@ export default function HeroSection() {
     const trails = new THREE.Points(trailGeometry, trailMaterial);
     scene.add(trails);
 
+    // Create magnetic particles around mouse
+    const magneticParticlesGeometry = new THREE.BufferGeometry();
+    const magneticCount = 200;
+    const magneticPositions = new Float32Array(magneticCount * 3);
+    const magneticVelocities = new Float32Array(magneticCount * 3);
+    const magneticColors = new Float32Array(magneticCount * 3);
+
+    for (let i = 0; i < magneticCount; i++) {
+      magneticPositions[i * 3] = (Math.random() - 0.5) * 20;
+      magneticPositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+      magneticPositions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      
+      magneticVelocities[i * 3] = (Math.random() - 0.5) * 0.02;
+      magneticVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+      magneticVelocities[i * 3 + 2] = 0;
+
+      const color = Math.random() > 0.5 ? new THREE.Color(0x22d3ee) : new THREE.Color(0x8b5cf6);
+      magneticColors[i * 3] = color.r;
+      magneticColors[i * 3 + 1] = color.g;
+      magneticColors[i * 3 + 2] = color.b;
+    }
+
+    magneticParticlesGeometry.setAttribute('position', new THREE.BufferAttribute(magneticPositions, 3));
+    magneticParticlesGeometry.setAttribute('velocity', new THREE.BufferAttribute(magneticVelocities, 3));
+    magneticParticlesGeometry.setAttribute('color', new THREE.BufferAttribute(magneticColors, 3));
+
+    const magneticParticlesMaterial = new THREE.PointsMaterial({
+      size: 0.15,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending,
+      vertexColors: true
+    });
+
+    const magneticParticles = new THREE.Points(magneticParticlesGeometry, magneticParticlesMaterial);
+    scene.add(magneticParticles);
+
     // Animation
     let speedMultiplier = 1;
     let targetSpeed = 1;
@@ -158,6 +206,10 @@ export default function HeroSection() {
     const animate = () => {
       requestAnimationFrame(animate);
       time += 0.01;
+
+      // Smooth mouse follow
+      mouse.x += (targetMouse.x - mouse.x) * 0.05;
+      mouse.y += (targetMouse.y - mouse.y) * 0.05;
 
       // Smooth speed transition
       speedMultiplier += (targetSpeed - speedMultiplier) * 0.05;
@@ -207,6 +259,63 @@ export default function HeroSection() {
       }
       trailGeometry.attributes.position.needsUpdate = true;
 
+      // Magnetic particle effect - attracted to mouse
+      const magneticPositions = magneticParticlesGeometry.attributes.position.array as Float32Array;
+      const magneticVelocities = magneticParticlesGeometry.attributes.velocity.array as Float32Array;
+      
+      const mouseWorldPos = new THREE.Vector3(mouse.x * 10, mouse.y * 10, 2);
+
+      for (let i = 0; i < magneticCount; i++) {
+        const particlePos = new THREE.Vector3(
+          magneticPositions[i * 3],
+          magneticPositions[i * 3 + 1],
+          magneticPositions[i * 3 + 2]
+        );
+
+        // Calculate distance to mouse
+        const distance = particlePos.distanceTo(mouseWorldPos);
+        const magneticForce = 0.5 / (distance + 1);
+
+        // Direction towards mouse
+        const direction = new THREE.Vector3()
+          .subVectors(mouseWorldPos, particlePos)
+          .normalize()
+          .multiplyScalar(magneticForce);
+
+        // Apply magnetic force
+        magneticVelocities[i * 3] += direction.x * 0.02;
+        magneticVelocities[i * 3 + 1] += direction.y * 0.02;
+
+        // Apply velocity with damping
+        magneticPositions[i * 3] += magneticVelocities[i * 3];
+        magneticPositions[i * 3 + 1] += magneticVelocities[i * 3 + 1];
+        magneticPositions[i * 3 + 2] += Math.sin(time + i * 0.1) * 0.03;
+
+        // Apply damping
+        magneticVelocities[i * 3] *= 0.95;
+        magneticVelocities[i * 3 + 1] *= 0.95;
+
+        // Orbit effect
+        const angle = Math.atan2(
+          magneticPositions[i * 3 + 1] - mouseWorldPos.y,
+          magneticPositions[i * 3] - mouseWorldPos.x
+        );
+        if (distance < 3) {
+          magneticVelocities[i * 3] += Math.cos(angle + Math.PI / 2) * 0.01;
+          magneticVelocities[i * 3 + 1] += Math.sin(angle + Math.PI / 2) * 0.01;
+        }
+
+        // Reset if too far
+        if (distance > 30) {
+          magneticPositions[i * 3] = mouseWorldPos.x + (Math.random() - 0.5) * 5;
+          magneticPositions[i * 3 + 1] = mouseWorldPos.y + (Math.random() - 0.5) * 5;
+          magneticVelocities[i * 3] = 0;
+          magneticVelocities[i * 3 + 1] = 0;
+        }
+      }
+      magneticParticlesGeometry.attributes.position.needsUpdate = true;
+      magneticParticlesGeometry.attributes.velocity.needsUpdate = true;
+
       // Camera shake on speed
       if (speedMultiplier > 2) {
         camera.position.x = Math.sin(time * 10) * 0.1;
@@ -246,6 +355,7 @@ export default function HeroSection() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('mousedown', handleMouseDown);
       container.removeEventListener('mouseup', handleMouseUp);
       if (container && renderer.domElement) {
