@@ -2,52 +2,60 @@ import { useEffect, useRef, useState } from 'react';
 
 const certifications = [
   {
-    year: '2023',
-    title: 'ISTQB Certified Tester',
-    level: 'Foundation Level',
-    organization: 'International Software Testing Qualifications Board'
-  },
-  {
-    year: '2022',
-    title: 'Tricentis Tosca Certified',
-    level: 'Automation Specialist Level 1',
-    organization: 'Tricentis'
-  },
-  {
-    year: '2022',
-    title: 'Agile Tester Certification',
-    level: 'Advanced Level',
-    organization: 'ISTQB'
-  },
-  {
-    year: '2021',
-    title: 'Certified SAFe Practitioner',
-    level: 'Scaled Agile Framework',
-    organization: 'Scaled Agile, Inc.'
+    year: '2024',
+    title: 'Test Design Specialist Level 2 (TDS-2)',
+    level: 'Advanced Test Design',
+    organization: 'Tricentis',
+    description: 'Advanced certification demonstrating expertise in test design principles, optimization techniques, and complex test scenario creation using Tosca.'
   },
   {
     year: '2023',
-    title: 'Selenium WebDriver',
-    level: 'Advanced Automation Testing',
-    organization: 'Test Automation University'
+    title: 'Tosca Product Consultant',
+    level: 'Expert Level',
+    organization: 'Tricentis',
+    description: 'Expert-level certification showcasing comprehensive knowledge in implementing and consulting on Tosca automation solutions for enterprise clients.'
+  },
+  {
+    year: '2023',
+    title: 'Tosca Test Architect (TA-1)',
+    level: 'Architecture Level',
+    organization: 'Tricentis',
+    description: 'Specialized certification in designing scalable test automation architectures and frameworks using Tosca best practices.'
+  },
+  {
+    year: '2022',
+    title: 'Tosca Automating API Test Cases (API)',
+    level: 'API Testing Specialist',
+    organization: 'Tricentis',
+    description: 'Certification focused on automating RESTful and SOAP API testing with Tosca, including validation and integration testing.'
+  },
+  {
+    year: '2022',
+    title: 'Tosca Automating Database TestCases (DB)',
+    level: 'Database Testing',
+    organization: 'Tricentis',
+    description: 'Specialized training in database testing automation, including query validation, data integrity checks, and database operations with Tosca.'
+  },
+  {
+    year: '2022',
+    title: 'GIS ESRI Certifications',
+    level: 'Geographic Information Systems',
+    organization: 'ESRI',
+    description: 'Certification in testing and validating GIS applications, spatial data analysis, and geographic information system workflows.'
   },
   {
     year: '2021',
-    title: 'API Testing Professional',
-    level: 'REST & SOAP Services',
-    organization: 'Postman'
+    title: 'ALM Compliance Domain Authorized Tester',
+    level: 'Compliance Testing',
+    organization: 'HP/Micro Focus',
+    description: 'Authorized certification in Application Lifecycle Management with focus on compliance testing and regulatory requirement validation.'
   },
   {
-    year: '2020',
-    title: 'Performance Testing',
-    level: 'LoadRunner Certified Professional',
-    organization: 'Micro Focus'
-  },
-  {
-    year: '2020',
-    title: 'Test Management',
-    level: 'JIRA & Test Planning Specialist',
-    organization: 'Atlassian'
+    year: '2021',
+    title: 'HP ALM General Training',
+    level: 'Test Management',
+    organization: 'HP/Micro Focus',
+    description: 'Comprehensive training in HP ALM for test planning, execution tracking, defect management, and quality reporting.'
   }
 ];
 
@@ -396,7 +404,7 @@ export default function CertificationsSection() {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10">
+    <div id="certifications" className="relative w-full min-h-screen bg-black text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10">
       <div className="w-full">
         <div className="mb-12 sm:mb-14 md:mb-16">
           <p 
@@ -443,8 +451,7 @@ export default function CertificationsSection() {
                       <span className="text-xs sm:text-sm text-gray-500 block mb-4">{cert.organization}</span>
                       <div className="border-t border-gray-700 pt-4">
                         <p className="text-sm text-gray-400 leading-relaxed">
-                          This certification demonstrates proficiency in industry-standard testing practices and methodologies, 
-                          ensuring quality software delivery through comprehensive testing strategies.
+                          {cert.description}
                         </p>
                       </div>
                     </div>
@@ -549,8 +556,7 @@ export default function CertificationsSection() {
                         <p className="text-gray-500 text-sm xl:text-base mb-4 xl:mb-6">{cert.organization}</p>
                         <div className="border-t border-gray-700 pt-4 xl:pt-6 mt-4 xl:mt-6">
                           <p className="text-xs xl:text-sm text-gray-400 leading-relaxed">
-                            This certification demonstrates proficiency in industry-standard testing practices and methodologies, 
-                            ensuring quality software delivery through comprehensive testing strategies.
+                            {cert.description}
                           </p>
                         </div>
                       </div>

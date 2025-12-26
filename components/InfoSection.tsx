@@ -17,7 +17,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
   
   const titleText = "Info";
   const mainText = "I ensure quality and excellence";
-  const descriptionText = "I'm a dedicated Quality Analyst and Tosca Tester from India, passionate about ensuring software excellence through rigorous testing and quality assurance practices. With expertise in automated testing and quality control, I help teams deliver flawless products that exceed expectations.";
+  const descriptionText = "I'm a dedicated Quality Analyst with 4.6+ years of specialized experience in Tricentis Tosca automation testing. From India, I'm passionate about ensuring software excellence through comprehensive automation frameworks. My expertise spans Tosca versions 13-16 with Vision AI, covering web-based, SAP, and Mainframe applications. Proficient in module scanning, test case design, TCD development, and test suite execution.";
 
   const contactItems = [
     {
@@ -364,7 +364,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
   };
 
   return (
-    <div ref={ref} className="relative w-full min-h-screen text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10 transition-colors duration-300" style={{ backgroundColor: 'rgb(0, 0, 0)' }}>
+    <div id="info" ref={ref} className="relative w-full min-h-screen text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10 transition-colors duration-300" style={{ backgroundColor: 'rgb(0, 0, 0)' }}>
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16">
           {/* Left Side - Text Content */}
@@ -413,7 +413,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
                     
                     {/* Image - Replace with your actual image */}
                     <img
-                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=800&fit=crop"
+                      src="/profile.JPG"
                       alt="Quality Analyst"
                       className="w-full h-full object-cover"
                     />
@@ -424,7 +424,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
 
                   {/* Floating badge */}
                   <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 bg-cyan-400 text-black px-4 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg">
-                    <p className="font-bold text-xs sm:text-sm">8+ Years</p>
+                    <p className="font-bold text-xs sm:text-sm">4.6+ Years</p>
                     <p className="text-[10px] sm:text-xs">Experience</p>
                   </div>
                 </div>
@@ -446,7 +446,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
                 Let's Connect
               </h3>
               <p ref={connectParaRef} className="text-base sm:text-lg md:text-xl font-light leading-relaxed text-gray-300">
-                {splitIntoWords("I'm always open to discussing new opportunities, collaborations, or just having a conversation about quality assurance and testing. Feel free to reach out through any of the channels, and let's create something exceptional together.")}
+                {splitIntoWords("I specialize in developing automation scripts using Tricentis Tosca with extensive experience in TOSCA Test Suite, ALM, JIRA Xray, and Jenkins CI/CD. My expertise includes Oracle Cloud application patch release automation (22A, 22B, 22C, 23A), model-based automation framework design, and comprehensive test requirement analysis. I'm always open to discussing automation strategies, testing methodologies, or collaboration opportunities. Let's connect and create robust testing solutions together.")}
               </p>
             </div>
 
@@ -521,7 +521,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
                   
                   {/* Image - Replace with your actual image */}
                   <img
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=800&fit=crop"
+                    src="/profile.JPG"
                     alt="Quality Analyst"
                     className="w-full h-full object-cover"
                   />
@@ -532,7 +532,7 @@ const InfoSection = forwardRef<HTMLDivElement, InfoSectionProps>(({ titleRef, ma
 
                 {/* Floating badge */}
                 <div className="absolute -bottom-6 -right-6 bg-cyan-400 text-black px-6 py-3 rounded-full shadow-lg">
-                  <p className="font-bold text-sm">8+ Years</p>
+                  <p className="font-bold text-sm">4.6+ Years</p>
                   <p className="text-xs">Experience</p>
                 </div>
               </div>
