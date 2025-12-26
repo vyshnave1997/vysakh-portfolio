@@ -14,7 +14,7 @@ export default function Loader({ progress, loading }: LoaderProps) {
         {/* Moving Text - Responsive sizing */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 whitespace-nowrap animate-slide">
           <h1 className="text-[6rem] sm:text-[8rem] md:text-[12rem] lg:text-[15rem] xl:text-[20rem] font-bold text-black">
-            IamVysakh
+            iamvysakh
           </h1>
         </div>
         

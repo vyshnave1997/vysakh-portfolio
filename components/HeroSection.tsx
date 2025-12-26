@@ -60,7 +60,6 @@ export default function HeroSection({ onMenuClick }: HeroSectionProps) {
               <div className="flex-1">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-light leading-tight whitespace-pre-line">
                   {displayedText}
-                  <span className="inline-block w-1 h-6 md:h-10 lg:h-12 bg-cyan-400 ml-1 animate-pulse"></span>
                   {staticText}
                 </h2>
               </div>
