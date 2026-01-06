@@ -432,7 +432,7 @@ export default function ProjectsSection() {
                   className="relative bg-black rounded-2xl xl:rounded-3xl flex-shrink-0 overflow-hidden border-2 border-cyan-500/50 cyber-border"
                   style={{
                     width: '90vw',
-                    height: '95vh',
+                    height: '90vh',
                     perspective: '1000px',
                     transformStyle: 'preserve-3d',
                   }}
