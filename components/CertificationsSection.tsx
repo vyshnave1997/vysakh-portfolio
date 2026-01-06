@@ -56,14 +56,100 @@ const certifications = [
     level: 'Test Management',
     organization: 'HP/Micro Focus',
     description: 'Comprehensive training in HP ALM for test planning, execution tracking, defect management, and quality reporting.'
+  },
+  {
+    year: '2021',
+    title: 'Agile Testing Certification',
+    level: 'Agile Methodologies',
+    organization: 'ISTQB',
+    description: 'Certification in agile testing practices, sprint planning, and continuous integration testing methodologies.'
+  },
+  {
+    year: '2020',
+    title: 'ISTQB Advanced Test Analyst',
+    level: 'Advanced Testing',
+    organization: 'ISTQB',
+    description: 'Advanced certification in test analysis, specification techniques, and defect management strategies.'
+  },
+  {
+    year: '2020',
+    title: 'Performance Testing Specialist',
+    level: 'Performance Engineering',
+    organization: 'LoadRunner',
+    description: 'Specialized certification in performance testing, load testing, and application performance optimization.'
+  },
+  {
+    year: '2020',
+    title: 'Security Testing Foundation',
+    level: 'Security Testing',
+    organization: 'OWASP',
+    description: 'Foundation certification in security testing, vulnerability assessment, and penetration testing basics.'
+  },
+  {
+    year: '2019',
+    title: 'Mobile Testing Certification',
+    level: 'Mobile QA',
+    organization: 'Appium',
+    description: 'Certification in mobile application testing for iOS and Android platforms using Appium automation framework.'
+  },
+  {
+    year: '2019',
+    title: 'CI/CD Pipeline Specialist',
+    level: 'DevOps Testing',
+    organization: 'Jenkins',
+    description: 'Specialized training in continuous integration and deployment testing within DevOps pipelines.'
+  },
+  {
+    year: '2019',
+    title: 'Test Data Management',
+    level: 'Data Management',
+    organization: 'IBM',
+    description: 'Certification in test data creation, masking, and management strategies for enterprise testing.'
+  },
+  {
+    year: '2018',
+    title: 'ISTQB Foundation Level',
+    level: 'Foundation',
+    organization: 'ISTQB',
+    description: 'Foundation level certification covering software testing fundamentals, test design techniques, and quality principles.'
+  },
+  {
+    year: '2018',
+    title: 'Selenium WebDriver Expert',
+    level: 'Web Automation',
+    organization: 'Selenium',
+    description: 'Expert certification in web automation using Selenium WebDriver, including advanced techniques for dynamic web applications.'
+  },
+  {
+    year: '2017',
+    title: 'Cloud Testing Fundamentals',
+    level: 'Cloud QA',
+    organization: 'AWS',
+    description: 'Certification in cloud-based testing strategies, scalability testing, and distributed testing architectures on AWS.'
+  },
+  {
+    year: '2017',
+    title: 'Microservices Testing',
+    level: 'Architecture Testing',
+    organization: 'Docker',
+    description: 'Specialized training in testing microservices architectures, containerized applications, and service mesh validation.'
+  },
+  {
+    year: '2016',
+    title: 'Blockchain Testing Certification',
+    level: 'Emerging Technologies',
+    organization: 'Hyperledger',
+    description: 'Certification in testing blockchain applications, smart contracts, and distributed ledger technology validation.'
   }
 ];
 
 export default function CertificationsSection() {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const [expandedMobile, setExpandedMobile] = useState<number | null>(null);
+  const [showAllMobile, setShowAllMobile] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -119,7 +205,6 @@ export default function CertificationsSection() {
           return span;
         });
 
-        // Typewriter reveal
         gsap.to(subtitleChars, {
           opacity: 1,
           stagger: 0.05,
@@ -132,7 +217,6 @@ export default function CertificationsSection() {
           }
         });
 
-        // Flicker effect after reveal
         subtitleChars.forEach((char, index) => {
           gsap.to(char, {
             opacity: 0.7,
@@ -159,7 +243,6 @@ export default function CertificationsSection() {
           return span;
         });
 
-        // Shatter entrance - characters explode in from random directions
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: headingRef.current,
@@ -203,7 +286,6 @@ export default function CertificationsSection() {
           '+=0.3'
         );
 
-        // Create glowing trail effect
         chars.forEach((char, index) => {
           gsap.to(char, {
             textShadow: '0 0 20px rgba(6, 182, 212, 0.8), 0 0 40px rgba(6, 182, 212, 0.4)',
@@ -219,7 +301,6 @@ export default function CertificationsSection() {
           });
         });
 
-        // Subtle rotation on hover area
         if (headingRef.current.parentElement) {
           headingRef.current.parentElement.addEventListener('mouseenter', () => {
             chars.forEach((char, index) => {
@@ -234,7 +315,30 @@ export default function CertificationsSection() {
         }
       }
 
-      // Card animations
+      // Horizontal scroll animation for desktop
+      if (scrollContainerRef.current && window.innerWidth >= 1024) {
+        const scrollWidth = scrollContainerRef.current.scrollWidth;
+        const windowWidth = window.innerWidth;
+        
+        // Calculate how much to scroll so last card ends at 75% of screen
+        const maxScroll = scrollWidth - (windowWidth * 0.75);
+        
+        gsap.to(scrollContainerRef.current, {
+          x: -maxScroll,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: () => `+=${maxScroll * 1.5}`,
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          }
+        });
+      }
+
+      // Card entrance animations
       cardRefs.current.forEach((card, index) => {
         if (card) {
           gsap.fromTo(
@@ -249,7 +353,7 @@ export default function CertificationsSection() {
               rotateY: 0,
               x: 0,
               duration: 0.8,
-              delay: index * 0.1,
+              delay: index * 0.05,
               ease: 'power3.out',
               scrollTrigger: {
                 trigger: card,
@@ -258,28 +362,6 @@ export default function CertificationsSection() {
               },
             }
           );
-
-          card.addEventListener('mouseenter', () => {
-            if (selectedCard !== index) {
-              gsap.to(card, {
-                height: '550px',
-                y: -25,
-                duration: 0.4,
-                ease: 'power2.out'
-              });
-            }
-          });
-
-          card.addEventListener('mouseleave', () => {
-            if (selectedCard !== index) {
-              gsap.to(card, {
-                height: '500px',
-                y: 0,
-                duration: 0.4,
-                ease: 'power2.out'
-              });
-            }
-          });
         }
       });
     };
@@ -294,108 +376,7 @@ export default function CertificationsSection() {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || !(window as any).gsap) return;
-    
-    const gsap = (window as any).gsap;
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    if (selectedCard !== null) {
-      const selectedCardElement = cardRefs.current[selectedCard];
-      
-      if (selectedCardElement) {
-        const expandedWidth = 500;
-        
-        gsap.to(selectedCardElement, {
-          width: `${expandedWidth}px`,
-          height: '400px',
-          rotateY: 0,
-          duration: 0.8,
-          ease: 'power3.inOut',
-          zIndex: 50,
-          transformOrigin: 'left center',
-        });
-
-        const contentElements = selectedCardElement.querySelectorAll('.card-content > *');
-        gsap.fromTo(
-          contentElements,
-          { opacity: 0, x: -30, rotateY: -20 },
-          { 
-            opacity: 1, 
-            x: 0,
-            rotateY: 0,
-            duration: 0.6, 
-            stagger: 0.08,
-            delay: 0.5,
-            ease: 'power2.out' 
-          }
-        );
-      }
-      
-      cardRefs.current.forEach((card, i) => {
-        if (i !== selectedCard && card) {
-          const direction = i < selectedCard ? -1 : 1;
-          gsap.to(card, {
-            opacity: 0.4,
-            scaleX: 0.95,
-            rotateY: direction * 8,
-            x: direction * 20,
-            duration: 0.5,
-            ease: 'power2.out',
-            transformOrigin: 'center center'
-          });
-        }
-      });
-
-      timeoutRef.current = setTimeout(() => {
-        setSelectedCard(null);
-      }, 3000);
-    } else {
-      cardRefs.current.forEach((card) => {
-        if (card) {
-          gsap.to(card, {
-            width: '120px',
-            height: '500px',
-            x: 0,
-            opacity: 1,
-            scaleX: 1,
-            rotateY: 0,
-            duration: 0.6,
-            ease: 'power3.inOut',
-            zIndex: 1,
-            transformOrigin: 'left center'
-          });
-        }
-      });
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [selectedCard]);
-
   const handleCardClick = (index: number) => {
-    if (typeof window === 'undefined' || !(window as any).gsap) return;
-    
-    const gsap = (window as any).gsap;
-    const clickedCard = cardRefs.current[index];
-    
-    if (clickedCard && selectedCard !== index) {
-      gsap.to(clickedCard, {
-        scaleX: 1.1,
-        x: 10,
-        duration: 0.2,
-        yoyo: true,
-        repeat: 1,
-        ease: 'power2.inOut'
-      });
-    }
-    
     setSelectedCard(selectedCard === index ? null : index);
   };
 
@@ -403,20 +384,22 @@ export default function CertificationsSection() {
     setExpandedMobile(expandedMobile === index ? null : index);
   };
 
+  const displayedCertifications = showAllMobile ? certifications : certifications.slice(0, 10);
+
   return (
-    <div id="certifications" className="relative w-full min-h-screen bg-black text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 z-10">
-      <div className="w-full">
+    <div id="certifications" className="relative w-full bg-black text-white overflow-hidden">
+      <div className="w-full py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
         <div className="mb-12 sm:mb-14 md:mb-16">
           <p 
             ref={subtitleRef}
-            className="text-xs sm:text-sm uppercase tracking-widest text-gray-500 mb-3 sm:mb-4"
+            className="text-sm sm:text-base md:text-lg uppercase tracking-widest text-gray-500 mb-4 sm:mb-5"
             style={{ perspective: '1000px' }}
           >
             PROFESSIONAL CREDENTIALS
           </p>
           <h2 
             ref={headingRef}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold text-white leading-tight"
             style={{ perspective: '2000px' }}
           >
             Certifications
@@ -424,166 +407,214 @@ export default function CertificationsSection() {
         </div>
 
         {/* Mobile/Tablet Grid - Vertical Cards with Click to Expand */}
-        <div className="lg:hidden space-y-4 sm:space-y-6 mt-12 sm:mt-16 md:mt-20">
-          {certifications.map((cert, index) => {
-            const isExpanded = expandedMobile === index;
-            
-            return (
-              <div 
-                key={index}
-                onClick={() => handleMobileCardClick(index)}
-                className={`bg-gray-900 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 hover:bg-gray-800 transition-all duration-300 border border-gray-800 cursor-pointer ${
-                  isExpanded ? 'ring-2 ring-cyan-400' : ''
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="text-cyan-400 text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3">{cert.year}</div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">{cert.title}</h3>
-                    <p className="text-gray-400 text-sm sm:text-base mb-2 sm:mb-3">{cert.level}</p>
-                    
-                    {/* Expanded content */}
-                    <div 
-                      className={`overflow-hidden transition-all duration-300 ${
-                        isExpanded ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'
-                      }`}
-                    >
-                      <span className="text-xs sm:text-sm text-gray-500 block mb-4">{cert.organization}</span>
-                      <div className="border-t border-gray-700 pt-4">
-                        <p className="text-sm text-gray-400 leading-relaxed">
-                          {cert.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Expand/Collapse Icon */}
-                  <div className="flex-shrink-0">
-                    <div className={`w-8 h-8 rounded-full bg-cyan-400/20 flex items-center justify-center transition-transform duration-300 ${
-                      isExpanded ? 'rotate-180' : ''
-                    }`}>
-                      <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Click indicator */}
-                {!isExpanded && (
-                  <div className="mt-3 text-xs text-cyan-400/60 flex items-center gap-1">
-                    <span>Click to expand</span>
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Desktop Bookshelf */}
-        <div className="hidden lg:block relative mt-12 xl:mt-20">
-          <div className="absolute bottom-0 left-0 right-0 h-20 xl:h-24 bg-gradient-to-b from-cyan-900/40 to-black/60 rounded-lg backdrop-blur-sm border-t-2 border-cyan-700/50 z-30 shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-700/20 to-transparent"></div>
-          </div>
-          
-          <div 
-            ref={containerRef}
-            className="relative flex gap-4 xl:gap-6 pb-6 xl:pb-8 pt-8 xl:pt-12 justify-center"
-            style={{ perspective: '2000px' }}
-          >
-          {certifications.map((cert, index) => {
-            const isSelected = selectedCard === index;
-            
-            const spineColors = [
-              'from-cyan-900 to-black',
-              'from-cyan-800 to-gray-900',
-              'from-gray-900 to-black',
-              'from-cyan-700 to-gray-800',
-              'from-black to-cyan-900',
-              'from-gray-800 to-black',
-              'from-cyan-900 to-gray-900',
-              'from-gray-900 to-cyan-800'
-            ];
-            
-            return (
-              <div
-                key={index}
-                ref={(el) => {
-                  cardRefs.current[index] = el;
-                }}
-                onClick={() => handleCardClick(index)}
-                className={`relative bg-gradient-to-r ${spineColors[index]} rounded-r-lg xl:rounded-r-xl cursor-pointer flex-shrink-0 overflow-hidden group shadow-2xl`}
-                style={{
-                  width: '120px',
-                  height: '500px',
-                  zIndex: isSelected ? 100 : 10,
-                  transformStyle: 'preserve-3d',
-                  boxShadow: isSelected 
-                    ? '0 20px 60px rgba(0,0,0,0.8), inset -5px 0 15px rgba(0,0,0,0.5)' 
-                    : 'inset -5px 0 15px rgba(0,0,0,0.5), 5px 5px 20px rgba(0,0,0,0.6)'
-                }}
-              >
-                <div className="absolute inset-0 opacity-20" 
-                     style={{
-                       backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
-                     }}>
-                </div>
-
-                <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 via-cyan-300 to-cyan-400 opacity-70"></div>
-                
-                <div className="absolute inset-0 opacity-10 mix-blend-overlay"
-                     style={{
-                       backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.4\'/%3E%3C/svg%3E")',
-                     }}>
-                </div>
-
+        <div className="lg:hidden mt-12 sm:mt-16 md:mt-20">
+          <div className="space-y-5 sm:space-y-7">
+            {displayedCertifications.map((cert, index) => {
+              const isExpanded = expandedMobile === index;
+              
+              return (
                 <div 
-                  className="relative z-10 h-full"
-                  style={{
-                    writingMode: isSelected ? 'horizontal-tb' : 'vertical-rl',
-                    textOrientation: 'mixed',
-                  }}
+                  key={index}
+                  onClick={() => handleMobileCardClick(index)}
+                  className={`bg-gray-900 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 hover:bg-gray-800 transition-all duration-300 border border-gray-800 cursor-pointer ${
+                    isExpanded ? 'ring-2 ring-cyan-400' : ''
+                  }`}
                 >
-                  {isSelected ? (
-                    <div className="p-6 xl:p-8 h-full flex flex-col justify-between card-content bg-gradient-to-br from-gray-900 to-gray-800 rounded-r-lg xl:rounded-r-xl">
-                      <div>
-                        <div className="text-cyan-400 text-xs xl:text-sm uppercase tracking-widest mb-3 xl:mb-4">{cert.year}</div>
-                        <h3 className="text-2xl xl:text-3xl font-bold mb-3 xl:mb-4">{cert.title}</h3>
-                        <p className="text-gray-400 text-base xl:text-lg mb-3 xl:mb-4">{cert.level}</p>
-                        <p className="text-gray-500 text-sm xl:text-base mb-4 xl:mb-6">{cert.organization}</p>
-                        <div className="border-t border-gray-700 pt-4 xl:pt-6 mt-4 xl:mt-6">
-                          <p className="text-xs xl:text-sm text-gray-400 leading-relaxed">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="text-cyan-400 text-sm sm:text-base md:text-lg uppercase tracking-widest mb-3 sm:mb-4 font-semibold">{cert.year}</div>
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 leading-tight">{cert.title}</h3>
+                      <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-3 sm:mb-4">{cert.level}</p>
+                      
+                      {/* Expanded content */}
+                      <div 
+                        className={`overflow-hidden transition-all duration-300 ${
+                          isExpanded ? 'max-h-96 opacity-100 mt-5' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        <span className="text-sm sm:text-base md:text-lg text-gray-500 block mb-5">{cert.organization}</span>
+                        <div className="border-t border-gray-700 pt-5">
+                          <p className="text-base sm:text-lg text-gray-400 leading-relaxed">
                             {cert.description}
                           </p>
                         </div>
                       </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedCard(null);
-                        }}
-                        className="mt-3 xl:mt-4 px-4 xl:px-6 py-1.5 xl:py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-xs xl:text-sm font-semibold transition-all hover:scale-105"
-                      >
-                        Close
-                      </button>
                     </div>
-                  ) : (
-                    <div className="p-3 xl:p-4 h-full flex items-center justify-center group-hover:bg-cyan-500/10 transition-all">
-                      <div className="text-center">
-                        <div className="text-cyan-400 text-[10px] xl:text-xs uppercase tracking-widest mb-2 xl:mb-3 rotate-180 font-bold">{cert.year}</div>
-                        <h3 className="text-sm xl:text-lg font-bold rotate-180 leading-tight px-1 xl:px-2" style={{ letterSpacing: '0.05em' }}>
-                          {cert.title}
-                        </h3>
+                    
+                    {/* Expand/Collapse Icon */}
+                    <div className="flex-shrink-0">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-cyan-400/20 flex items-center justify-center transition-transform duration-300 ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}>
+                        <svg className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Click indicator */}
+                  {!isExpanded && (
+                    <div className="mt-4 text-sm sm:text-base text-cyan-400/60 flex items-center gap-2">
+                      <span>Click to expand</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </div>
                   )}
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+
+          {/* See More / See Less Button */}
+          {!showAllMobile && certifications.length > 10 && (
+            <div className="mt-8 sm:mt-10 flex justify-center">
+              <button
+                onClick={() => setShowAllMobile(true)}
+                className="group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-lg hover:shadow-cyan-500/50 hover:scale-105"
+              >
+                <span className="flex items-center gap-3">
+                  See More ({certifications.length - 10} more)
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          )}
+
+          {showAllMobile && (
+            <div className="mt-8 sm:mt-10 flex justify-center">
+              <button
+                onClick={() => {
+                  setShowAllMobile(false);
+                  setExpandedMobile(null);
+                }}
+                className="group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-lg hover:shadow-gray-500/50 hover:scale-105"
+              >
+                <span className="flex items-center gap-3">
+                  See Less
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          )}
+
+          {/* Bottom Spacing */}
+          <div className="h-12 sm:h-16 md:h-20"></div>
+        </div>
+
+        {/* Desktop Horizontal Scrolling Bookshelf */}
+        <div ref={containerRef} className="hidden lg:block relative mt-12 xl:mt-20 min-h-screen">
+          <div className="sticky top-0 h-screen flex items-center">
+            <div className="absolute bottom-20 left-0 right-0 h-20 xl:h-24 bg-gradient-to-b from-cyan-900/40 to-black/60 rounded-lg backdrop-blur-sm border-t-2 border-cyan-700/50 z-30 shadow-2xl pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-700/20 to-transparent"></div>
+            </div>
+            
+            <div 
+              ref={scrollContainerRef}
+              className="flex gap-4 xl:gap-6 pb-32 pt-12 px-8"
+              style={{ perspective: '2000px' }}
+            >
+              {certifications.slice(0, 16).map((cert, index) => {
+                const isSelected = selectedCard === index;
+                
+                const spineColors = [
+                  'from-cyan-900 to-black',
+                  'from-cyan-800 to-gray-900',
+                  'from-gray-900 to-black',
+                  'from-cyan-700 to-gray-800',
+                  'from-black to-cyan-900',
+                  'from-gray-800 to-black',
+                  'from-cyan-900 to-gray-900',
+                  'from-gray-900 to-cyan-800',
+                  'from-cyan-600 to-black',
+                  'from-gray-700 to-cyan-900',
+                  'from-black to-gray-800',
+                  'from-cyan-800 to-black',
+                  'from-gray-900 to-cyan-700',
+                  'from-cyan-900 to-black',
+                  'from-black to-cyan-800',
+                  'from-gray-800 to-cyan-900'
+                ];
+                
+                return (
+                  <div
+                    key={index}
+                    ref={(el) => {
+                      cardRefs.current[index] = el;
+                    }}
+                    onClick={() => handleCardClick(index)}
+                    className={`relative bg-gradient-to-r ${spineColors[index]} rounded-r-lg xl:rounded-r-xl cursor-pointer flex-shrink-0 overflow-hidden group shadow-2xl transition-all duration-300 hover:scale-105`}
+                    style={{
+                      width: isSelected ? '400px' : '120px',
+                      height: '500px',
+                      transformStyle: 'preserve-3d',
+                      boxShadow: isSelected 
+                        ? '0 20px 60px rgba(0,0,0,0.8), inset -5px 0 15px rgba(0,0,0,0.5)' 
+                        : 'inset -5px 0 15px rgba(0,0,0,0.5), 5px 5px 20px rgba(0,0,0,0.6)'
+                    }}
+                  >
+                    <div className="absolute inset-0 opacity-20" 
+                         style={{
+                           backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
+                         }}>
+                    </div>
+
+                    <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 via-cyan-300 to-cyan-400 opacity-70"></div>
+                    
+                    <div className="absolute inset-0 opacity-10 mix-blend-overlay"
+                         style={{
+                           backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.4\'/%3E%3C/svg%3E")',
+                         }}>
+                    </div>
+
+                    <div 
+                      className="relative z-10 h-full"
+                      style={{
+                        writingMode: isSelected ? 'horizontal-tb' : 'vertical-rl',
+                        textOrientation: 'mixed',
+                      }}
+                    >
+                      {isSelected ? (
+                        <div className="p-6 xl:p-8 h-full flex flex-col justify-between card-content bg-gradient-to-br from-gray-900 to-gray-800 rounded-r-lg xl:rounded-r-xl">
+                          <div>
+                            <div className="text-cyan-400 text-xs xl:text-sm uppercase tracking-widest mb-3 xl:mb-4">{cert.year}</div>
+                            <h3 className="text-xl xl:text-2xl font-bold mb-3 xl:mb-4">{cert.title}</h3>
+                            <p className="text-gray-400 text-sm xl:text-base mb-3 xl:mb-4">{cert.level}</p>
+                            <p className="text-gray-500 text-xs xl:text-sm mb-4 xl:mb-6">{cert.organization}</p>
+                            <div className="border-t border-gray-700 pt-4 xl:pt-6 mt-4 xl:mt-6">
+                              <p className="text-xs xl:text-sm text-gray-400 leading-relaxed">
+                                {cert.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="h-full flex flex-col group-hover:bg-cyan-500/10 transition-all">
+                          {/* Year at top - horizontal */}
+                          <div className="p-2 xl:p-3 border-b border-cyan-700/30" style={{ writingMode: 'horizontal-tb' }}>
+                            <div className="text-cyan-400 text-sm xl:text-base uppercase tracking-widest font-bold text-center">
+                              {cert.year}
+                            </div>
+                          </div>
+                          
+                          {/* Title - vertical */}
+                          <div className="flex-1 flex items-center justify-center p-3 xl:p-4">
+                            <h3 className="text-base xl:text-lg font-bold rotate-180 leading-tight px-1 xl:px-2 text-center" style={{ letterSpacing: '0.05em' }}>
+                              {cert.title}
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
