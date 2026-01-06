@@ -151,14 +151,14 @@ export default function ExperienceSection() {
           item,
           {
             opacity: 0,
-            x: -100,
+            x: -20,
             scale: 0.8,
           },
           {
             opacity: 1,
             x: 0,
             scale: 1,
-            duration: 3.5,
+            duration: 0.4,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: item,
