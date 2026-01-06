@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 const projects = [
   {
@@ -16,8 +16,7 @@ const projects = [
       'Optimized functionality using Business Parameters, Test Configuration Parameters, Steering Parameters, and Reusable test step blocks',
       'Successfully integrated Tosca with Micro Focus ALM for execution status updates and generated customized validation reports',
       'Managed application changes across multiple releases (R6, R7, R8)'
-    ],
-    color: 'from-cyan-900 to-blue-900'
+    ]
   },
   {
     title: 'Clinical Trial Management System',
@@ -34,8 +33,7 @@ const projects = [
       'Implemented API testing strategy for RESTful services integration',
       'Established CI/CD pipeline integration with Azure DevOps',
       'Reduced regression testing time by 70% through automation'
-    ],
-    color: 'from-purple-900 to-indigo-900'
+    ]
   },
   {
     title: 'Healthcare Insurance Portal',
@@ -52,8 +50,7 @@ const projects = [
       'Created data-driven testing framework for policy variations',
       'Integrated automated database validation for claims processing',
       'Mentored team of 4 junior automation engineers'
-    ],
-    color: 'from-emerald-900 to-teal-900'
+    ]
   },
   {
     title: 'Banking Core System Modernization',
@@ -70,8 +67,7 @@ const projects = [
       'Developed performance testing scripts for high-volume scenarios',
       'Created automated regression suite for backward compatibility validation',
       'Coordinated with 3 offshore teams for test execution'
-    ],
-    color: 'from-orange-900 to-red-900'
+    ]
   },
   {
     title: 'Supply Chain Management Platform',
@@ -88,8 +84,7 @@ const projects = [
       'Created API automation suite for third-party integrations',
       'Established mobile testing strategy for iOS and Android apps',
       'Achieved 85% test automation coverage'
-    ],
-    color: 'from-violet-900 to-purple-900'
+    ]
   },
   {
     title: 'E-Commerce Platform Upgrade',
@@ -106,13 +101,11 @@ const projects = [
       'Developed cross-browser testing suite for 5+ browsers',
       'Created performance benchmarking scripts for load testing',
       'Collaborated with development team for bug triage and resolution'
-    ],
-    color: 'from-pink-900 to-rose-900'
+    ]
   }
 ];
 
 export default function ProjectsSection() {
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -153,7 +146,7 @@ export default function ProjectsSection() {
 
       gsap.registerPlugin(ScrollTrigger);
 
-      // Animate subtitle
+      // Animate subtitle with glitch effect
       if (subtitleRef.current) {
         const subtitleText = subtitleRef.current.textContent || '';
         subtitleRef.current.innerHTML = '';
@@ -169,9 +162,13 @@ export default function ProjectsSection() {
 
         gsap.to(subtitleChars, {
           opacity: 1,
-          stagger: 0.05,
-          duration: 0.1,
-          ease: 'none',
+          y: 0,
+          stagger: {
+            each: 0.03,
+            from: 'random'
+          },
+          duration: 0.5,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: subtitleRef.current,
             start: 'top 85%',
@@ -180,7 +177,7 @@ export default function ProjectsSection() {
         });
       }
 
-      // Animate heading
+      // Animate heading with explosive entrance
       if (headingRef.current) {
         const headingText = headingRef.current.textContent || '';
         headingRef.current.innerHTML = '';
@@ -205,23 +202,23 @@ export default function ProjectsSection() {
           chars,
           {
             opacity: 0,
-            x: () => (Math.random() - 0.5) * 800,
-            y: () => (Math.random() - 0.5) * 800,
-            rotation: () => Math.random() * 360,
-            scale: () => Math.random() * 2 + 0.5,
+            scale: 0,
+            rotation: () => Math.random() * 720 - 360,
+            x: () => (Math.random() - 0.5) * 1000,
+            y: () => (Math.random() - 0.5) * 1000,
           },
           {
             opacity: 1,
+            scale: 1,
+            rotation: 0,
             x: 0,
             y: 0,
-            rotation: 0,
-            scale: 1,
             stagger: {
-              each: 0.03,
-              from: 'random',
+              each: 0.04,
+              from: 'center',
             },
-            duration: 1.2,
-            ease: 'power4.out',
+            duration: 1.5,
+            ease: 'elastic.out(1, 0.5)',
           }
         );
       }
@@ -230,7 +227,7 @@ export default function ProjectsSection() {
       if (scrollContainerRef.current && window.innerWidth >= 1024) {
         const scrollWidth = scrollContainerRef.current.scrollWidth;
         const windowWidth = window.innerWidth;
-        const maxScroll = scrollWidth - windowWidth + 400;
+        const maxScroll = scrollWidth - windowWidth + (windowWidth * 0.5);
         
         gsap.to(scrollContainerRef.current, {
           x: -maxScroll,
@@ -238,7 +235,7 @@ export default function ProjectsSection() {
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top top',
-            end: () => `+=${maxScroll * 1.5}`,
+            end: () => `+=${maxScroll * 4}`,
             scrub: 1,
             pin: true,
             anticipatePin: 1,
@@ -247,23 +244,26 @@ export default function ProjectsSection() {
         });
       }
 
-      // Card entrance animations
+      // Card entrance animations with 3D effects
       cardRefs.current.forEach((card, index) => {
         if (card) {
+          // Main card animation
           gsap.fromTo(
             card,
             {
               opacity: 0,
-              y: 100,
-              rotateX: -45,
+              scale: 0.5,
+              rotateY: -90,
+              z: -500,
             },
             {
               opacity: 1,
-              y: 0,
-              rotateX: 0,
-              duration: 0.8,
-              delay: index * 0.1,
-              ease: 'power3.out',
+              scale: 1,
+              rotateY: 0,
+              z: 0,
+              duration: 1.2,
+              delay: index * 0.15,
+              ease: 'power4.out',
               scrollTrigger: {
                 trigger: card,
                 start: 'top bottom-=100',
@@ -271,6 +271,26 @@ export default function ProjectsSection() {
               },
             }
           );
+
+          // Continuous floating animation
+          gsap.to(card, {
+            y: '+=20',
+            duration: 2 + Math.random(),
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: index * 0.2,
+          });
+
+          // Glow pulse effect
+          gsap.to(card, {
+            boxShadow: '0 0 60px rgba(0, 255, 255, 0.4), 0 0 120px rgba(0, 255, 255, 0.2)',
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: index * 0.3,
+          });
         }
       });
     };
@@ -286,18 +306,58 @@ export default function ProjectsSection() {
   }, []);
 
   return (
-    <div id="projects" className="relative w-full bg-black text-white overflow-hidden">
+    <div id="projects" className="relative w-full bg-black text-cyan-400 overflow-hidden">
+      {/* Hide scrollbar */}
+      <style>{`
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .cyber-border {
+          position: relative;
+        }
+        .cyber-border::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          padding: 2px;
+          background: linear-gradient(45deg, #00ffff, transparent, #00ffff);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          animation: borderRotate 3s linear infinite;
+        }
+        @keyframes borderRotate {
+          0% { filter: hue-rotate(0deg); }
+          100% { filter: hue-rotate(360deg); }
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       <div className="w-full py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
         <div className="mb-12 sm:mb-14 md:mb-16">
           <p 
             ref={subtitleRef}
-            className="text-sm sm:text-base md:text-lg uppercase tracking-widest text-gray-500 mb-4 sm:mb-5"
+            className="text-sm sm:text-base md:text-lg uppercase tracking-[0.3em] text-cyan-500 mb-4 sm:mb-5 font-mono"
           >
             PORTFOLIO SHOWCASE
           </p>
           <h2 
             ref={headingRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold text-white leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold text-cyan-400 leading-tight"
+            style={{
+              textShadow: '0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3)'
+            }}
           >
             Projects
           </h2>
@@ -308,44 +368,44 @@ export default function ProjectsSection() {
           {projects.map((project, index) => (
             <div
               key={index}
-              className={`bg-gradient-to-br ${project.color} rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-gray-700/50 shadow-2xl hover:scale-[1.02] transition-transform duration-300`}
+              className="bg-black rounded-xl sm:rounded-2xl p-6 sm:p-8 border-2 border-cyan-500/50 shadow-[0_0_30px_rgba(0,255,255,0.3)] hover:shadow-[0_0_50px_rgba(0,255,255,0.5)] transition-all duration-300 cyber-border"
             >
               <div className="space-y-4 sm:space-y-5">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-cyan-300">
                   {project.title}
                 </h3>
                 
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                   <div>
-                    <div className="text-cyan-400 uppercase tracking-wider mb-1">Role</div>
-                    <div className="text-white font-medium">{project.role}</div>
+                    <div className="text-cyan-500 uppercase tracking-wider mb-1 font-mono">Role</div>
+                    <div className="text-cyan-300 font-medium">{project.role}</div>
                   </div>
                   <div>
-                    <div className="text-cyan-400 uppercase tracking-wider mb-1">Year</div>
-                    <div className="text-white font-medium">{project.year}</div>
+                    <div className="text-cyan-500 uppercase tracking-wider mb-1 font-mono">Year</div>
+                    <div className="text-cyan-300 font-medium">{project.year}</div>
                   </div>
                   <div>
-                    <div className="text-cyan-400 uppercase tracking-wider mb-1">Team Size</div>
-                    <div className="text-white font-medium">{project.teamSize}</div>
+                    <div className="text-cyan-500 uppercase tracking-wider mb-1 font-mono">Team Size</div>
+                    <div className="text-cyan-300 font-medium">{project.teamSize}</div>
                   </div>
                   <div>
-                    <div className="text-cyan-400 uppercase tracking-wider mb-1">Tosca Version</div>
-                    <div className="text-white font-medium">{project.toscaVersion}</div>
+                    <div className="text-cyan-500 uppercase tracking-wider mb-1 font-mono">Tosca Version</div>
+                    <div className="text-cyan-300 font-medium">{project.toscaVersion}</div>
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-cyan-400 uppercase tracking-wider text-xs sm:text-sm mb-2">Overview</div>
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+                  <div className="text-cyan-500 uppercase tracking-wider text-xs sm:text-sm mb-2 font-mono">Overview</div>
+                  <p className="text-cyan-200 text-sm sm:text-base leading-relaxed">
                     {project.overview}
                   </p>
                 </div>
 
                 <div>
-                  <div className="text-cyan-400 uppercase tracking-wider text-xs sm:text-sm mb-2">Tools</div>
+                  <div className="text-cyan-500 uppercase tracking-wider text-xs sm:text-sm mb-2 font-mono">Tools</div>
                   <div className="flex flex-wrap gap-2">
                     {project.tools.map((tool, i) => (
-                      <span key={i} className="px-3 py-1 bg-black/40 rounded-full text-xs sm:text-sm border border-cyan-500/30">
+                      <span key={i} className="px-3 py-1 bg-cyan-500/10 rounded-full text-xs sm:text-sm border border-cyan-500/50 text-cyan-300 font-mono">
                         {tool}
                       </span>
                     ))}
@@ -361,7 +421,7 @@ export default function ProjectsSection() {
           <div className="sticky top-0 h-screen flex items-center">
             <div 
               ref={scrollContainerRef}
-              className="flex gap-8 xl:gap-10 pb-20 pt-12 px-8"
+              className="flex gap-16 xl:gap-20 pb-20 pt-12 px-8"
             >
               {projects.map((project, index) => (
                 <div
@@ -369,90 +429,101 @@ export default function ProjectsSection() {
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  onClick={() => setSelectedProject(selectedProject === index ? null : index)}
-                  className={`relative bg-gradient-to-br ${project.color} rounded-2xl xl:rounded-3xl cursor-pointer flex-shrink-0 overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 border border-gray-700/50`}
+                  className="relative bg-black rounded-2xl xl:rounded-3xl flex-shrink-0 overflow-hidden border-2 border-cyan-500/50 cyber-border"
                   style={{
-                    width: selectedProject === index ? '800px' : '500px',
-                    height: '600px',
+                    width: '90vw',
+                    height: '95vh',
+                    perspective: '1000px',
+                    transformStyle: 'preserve-3d',
                   }}
                 >
-                  <div className="absolute inset-0 bg-black/20"></div>
+                  {/* Animated grid background */}
+                  <div 
+                    className="absolute inset-0 opacity-10"
+                    style={{
+                      backgroundImage: 'linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)',
+                      backgroundSize: '50px 50px',
+                    }}
+                  />
                   
-                  <div className="relative z-10 p-8 xl:p-10 h-full flex flex-col">
-                    <div className="flex-1 overflow-y-auto">
-                      <h3 className="text-3xl xl:text-4xl font-bold mb-6 leading-tight">
+                  <div className="relative z-10 p-8 xl:p-12 h-full flex flex-col overflow-y-auto no-scrollbar">
+                    <div className="flex-1">
+                      <h3 
+                        className="text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-6 xl:mb-8 leading-tight text-cyan-300"
+                        style={{
+                          textShadow: '0 0 15px rgba(0, 255, 255, 0.5)'
+                        }}
+                      >
                         {project.title}
                       </h3>
                       
-                      <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="grid grid-cols-3 gap-6 xl:gap-8 mb-8">
                         <div>
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-1">Role</div>
-                          <div className="text-white font-medium">{project.role}</div>
+                          <div className="text-cyan-500 uppercase tracking-wider text-sm mb-2 font-mono">Role</div>
+                          <div className="text-cyan-300 font-medium text-lg">{project.role}</div>
                         </div>
                         <div>
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-1">Duration</div>
-                          <div className="text-white font-medium">{project.duration}</div>
+                          <div className="text-cyan-500 uppercase tracking-wider text-sm mb-2 font-mono">Duration</div>
+                          <div className="text-cyan-300 font-medium text-lg">{project.duration}</div>
                         </div>
                         <div>
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-1">Year</div>
-                          <div className="text-white font-medium">{project.year}</div>
+                          <div className="text-cyan-500 uppercase tracking-wider text-sm mb-2 font-mono">Year</div>
+                          <div className="text-cyan-300 font-medium text-lg">{project.year}</div>
                         </div>
                         <div>
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-1">Team Size</div>
-                          <div className="text-white font-medium">{project.teamSize}</div>
+                          <div className="text-cyan-500 uppercase tracking-wider text-sm mb-2 font-mono">Team Size</div>
+                          <div className="text-cyan-300 font-medium text-lg">{project.teamSize}</div>
                         </div>
                         <div>
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-1">Tosca Version</div>
-                          <div className="text-white font-medium">{project.toscaVersion}</div>
+                          <div className="text-cyan-500 uppercase tracking-wider text-sm mb-2 font-mono">Tosca Version</div>
+                          <div className="text-cyan-300 font-medium text-lg">{project.toscaVersion}</div>
                         </div>
                         <div>
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-1">Workspace</div>
-                          <div className="text-white font-medium">{project.workspace}</div>
+                          <div className="text-cyan-500 uppercase tracking-wider text-sm mb-2 font-mono">Workspace</div>
+                          <div className="text-cyan-300 font-medium text-lg">{project.workspace}</div>
                         </div>
                       </div>
 
-                      <div className="mb-6">
-                        <div className="text-cyan-400 uppercase tracking-wider text-xs mb-2">Tools</div>
-                        <div className="flex flex-wrap gap-2">
+                      <div className="mb-8">
+                        <div className="text-cyan-500 uppercase tracking-wider text-sm mb-3 font-mono">Tools</div>
+                        <div className="flex flex-wrap gap-3">
                           {project.tools.map((tool, i) => (
-                            <span key={i} className="px-3 py-1.5 bg-black/40 rounded-full text-sm border border-cyan-500/30 font-medium">
+                            <span 
+                              key={i} 
+                              className="px-4 py-2 bg-cyan-500/10 rounded-full text-base border border-cyan-500/50 font-medium text-cyan-300 font-mono hover:bg-cyan-500/20 transition-colors duration-300"
+                            >
                               {tool}
                             </span>
                           ))}
                         </div>
                       </div>
 
-                      <div className="mb-6">
-                        <div className="text-cyan-400 uppercase tracking-wider text-xs mb-2">Overview</div>
-                        <p className="text-gray-200 leading-relaxed">
+                      <div className="mb-8">
+                        <div className="text-cyan-500 uppercase tracking-wider text-sm mb-3 font-mono">Overview</div>
+                        <p className="text-cyan-200 leading-relaxed text-lg">
                           {project.overview}
                         </p>
                       </div>
 
-                      {selectedProject === index && (
-                        <div className="animate-fadeIn">
-                          <div className="text-cyan-400 uppercase tracking-wider text-xs mb-3">Key Responsibilities</div>
-                          <ul className="space-y-2">
-                            {project.responsibilities.map((resp, i) => (
-                              <li key={i} className="text-gray-200 text-sm leading-relaxed flex items-start">
-                                <span className="text-cyan-400 mr-2 mt-1">▸</span>
-                                <span>{resp}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {selectedProject !== index && (
-                      <div className="mt-4 text-sm text-cyan-400/80 flex items-center gap-2">
-                        <span>Click to expand</span>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                      <div>
+                        <div className="text-cyan-500 uppercase tracking-wider text-sm mb-4 font-mono">Key Responsibilities</div>
+                        <ul className="space-y-3">
+                          {project.responsibilities.map((resp, i) => (
+                            <li key={i} className="text-cyan-200 text-base leading-relaxed flex items-start">
+                              <span className="text-cyan-400 mr-3 mt-1.5 text-lg">▸</span>
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                    )}
+                    </div>
                   </div>
+
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-400"></div>
+                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-cyan-400"></div>
+                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-cyan-400"></div>
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-400"></div>
                 </div>
               ))}
             </div>
